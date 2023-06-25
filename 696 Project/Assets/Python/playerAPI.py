@@ -1,5 +1,5 @@
 import socket
-import time
+from time import sleep
 
 host, port = "127.0.0.1", 25001
 data = "1,0,3"
@@ -15,8 +15,8 @@ def close_connection():
 
 def forward(steps: int = 1):
     sock.sendall(f"forward {steps}".encode("utf-8"))
-    time.sleep(0.5)
+    sleep(0.5)
 
 def turn(direction: str):
     sock.sendall(f"turn {direction}".encode("utf-8"))
-    time.sleep(0.5)
+    sleep(0.5)

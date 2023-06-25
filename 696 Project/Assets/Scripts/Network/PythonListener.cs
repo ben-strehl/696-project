@@ -42,6 +42,7 @@ public class PythonListener : MonoBehaviour
             try{
                 Connection();
             } catch(SocketException) {
+                Debug.Log("Go fuck yourself");
                 client = server.AcceptTcpClient();
             }
         }
