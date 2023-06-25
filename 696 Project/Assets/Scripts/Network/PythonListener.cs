@@ -41,8 +41,7 @@ public class PythonListener : MonoBehaviour
         {
             try{
                 Connection();
-            } catch(SocketException) {
-                Debug.Log("Go fuck yourself");
+            } catch {
                 client = server.AcceptTcpClient();
             }
         }
@@ -88,6 +87,10 @@ public class PythonListener : MonoBehaviour
             case "turn":
                 args.Add(stringArray[1]);
                 player.EnqueueAction(new Action(ActionType.Turn, args.ToArray()));
+                break;
+            case "interact":
+                args.Add("");
+                player.EnqueueAction(new Action(ActionType.Interact, args.ToArray()));
                 break;
             default:
                 Debug.Log("Invalid command received");

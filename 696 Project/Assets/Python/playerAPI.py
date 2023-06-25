@@ -20,3 +20,7 @@ def forward(steps: int = 1):
 def turn(direction: str):
     sock.sendall(f"turn {direction}".encode("utf-8"))
     sleep(0.5)
+
+def interact():
+    sock.sendall("interact".encode("utf-8"))
+    sleep(0.5)

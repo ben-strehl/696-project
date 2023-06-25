@@ -62,6 +62,13 @@ public class PlayerController : MonoBehaviour
                     case ActionType.Turn:
                         Turn(action.args[0]);
                         break;
+                    case ActionType.Interact:
+                        Interact();
+                        break;
+                    default:
+                        //Shouldn't be possible to reach this
+                        Debug.Log("Invalid command at player");
+                        break;
                 }
             }
         }
@@ -96,6 +103,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void Interact() {
+        Debug.Log("Interacting");
+    }
+
     public void EnqueueAction(Action action){
         actionQueue.Enqueue(action);
     }
@@ -112,6 +123,7 @@ public class PlayerController : MonoBehaviour
 
     public enum ActionType {
         Forward,
-        Turn
+        Turn,
+        Interact,
     }
 }
