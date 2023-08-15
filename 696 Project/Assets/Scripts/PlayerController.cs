@@ -52,9 +52,7 @@ public class PlayerController : MonoBehaviour
                 isMoving = false;
             }
         } else {
-            Action action;
-
-            if(actionQueue.TryDequeue(out action)) {
+            if(actionQueue.TryDequeue(out Action action)) {
                 switch(action.actionType){
                     case ActionType.Forward:
                         Forward(int.Parse(action.args[0]));
