@@ -1,6 +1,7 @@
-# 696-project
+# CSE 696 Project
+A Unity game designed to teach players the basics of programming in Python
 
-## Rules
-1. This is going to be so sick and cool
-2. I am a genius
-3. Fun!
+## Design
+- In-game text editor to allow the player to write and run Python programs
+- Built-in interpreter so that the game is standalone and not reliant on an existing Python installation
+- The player is provided with an API to send commands to the game server over a local TCP socket
