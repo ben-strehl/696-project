@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 using System.Threading;
 using System.Collections.Generic;
-using static PlayerController;
+using static RobotController;
 
 public class PythonListener : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class PythonListener : MonoBehaviour
     private TcpListener server;
     private TcpClient client;
     private bool running;
-    private static PlayerController player;
+    private static RobotController robot;
     private static Queue<string> commandQueue = new Queue<string>();
 
     void Start()
@@ -23,7 +23,7 @@ public class PythonListener : MonoBehaviour
         thread = new Thread(ts);
         thread.Start();
 
-        player = GameObject.Find("Player").GetComponent<PlayerController>();
+        robot = GameObject.Find("Player").GetComponent<RobotController>();
     }
 
     void GetData()
@@ -82,15 +82,15 @@ public class PythonListener : MonoBehaviour
         switch(stringArray[0]) {
             case "forward":
                 args.Add(stringArray[1]);
-                player.EnqueueAction(new Action(ActionType.Forward, args.ToArray()));
+                robot.EnqueueAction(new Action(ActionType.Forward, args.ToArray()));
                 break;
             case "turn":
                 args.Add(stringArray[1]);
-                player.EnqueueAction(new Action(ActionType.Turn, args.ToArray()));
+                robot.EnqueueAction(new Action(ActionType.Turn, args.ToArray()));
                 break;
             case "interact":
                 args.Add("");
-                player.EnqueueAction(new Action(ActionType.Interact, args.ToArray()));
+                robot.EnqueueAction(new Action(ActionType.Interact, args.ToArray()));
                 break;
             default:
                 Debug.Log("Invalid command received");

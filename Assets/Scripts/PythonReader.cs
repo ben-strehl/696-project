@@ -7,43 +7,56 @@ using System.Threading;
 
 public class PythonReader : MonoBehaviour
 {
+    [SerializeField] private string path;
+    private Thread thread;
     private VM vm;
     // Start is called before the first frame update
     void Start()
     {
         vm = new VM();
-        RunProgram();
-        /* Thread t = new Thread(new ThreadStart(ReadFile)); */
-        /* t.Start(); */
-        /* /1* vm.RegisterType(new PyPlayerConnector(), vm.builtins); *1/ */
-        /* // RunProgram(); */
-        /* vm.Exec("pc = player_connector()", "main.py"); */
-        /* vm.Exec("pc.forward('1')", "main.py"); */
+        /* var mod = vm.NewModule("playerAPI"); */
+        /* vm.PyImport("playerAPI"); */
+        StreamReader sr = File.OpenText(".\\Assets\\Python\\playerAPI.py");
+        string s = "";
+        string line;
+        while ((line = sr.ReadLine()) != null)
+        {
+            s += "\n" + line;
+        }
+        /* vm.Exec(s, "playerAPI.py"); */
+        vm.lazyModules["playerAPI"] = s;
+        ThreadStart ts = new ThreadStart(RunProgram);
+        thread = new Thread(ts);
+        thread.IsBackground = true;
+        thread.Start();
     }
 
     void RunProgram(){
-        string path = ".\\Assets\\Python\\pythonInterTest.py";
+        StreamReader sr = File.OpenText(path);
+        string s = "";
+        string line;
+        while ((line = sr.ReadLine()) != null)
+        {
+            s += "\n" + line;
+        }
         
-
-        string s = 
-            @"
-class MyClass:
-  def __init__(self, text):
-    self.text = text
-
-  def get_self(self):
-    return self
-
-bob = MyClass('Hello from Python!')
-
-             ";
         /* Debug.Log("Read file"); */
         vm.Exec(s, "main.py");
-        var obj = vm.Eval("bob.get_self()");
+        /* Debug.Log("Ran file"); */
+        var obj = vm.Eval("opList.get_self()");
 
-        Debug.Log("Object: " + obj);
-        var pyReturn = vm.GetAttr(obj, "text");
-        Debug.Log("String from python: " + pyReturn);
+        /* Debug.Log("Object: " + obj); */
+        var pyReturn = (List<System.Object>)vm.GetAttr(obj, "text");
+        /* if(pyReturn.GetType() == typeof(List<System.Object>)){ */
+            /* Debug.Log("String from python: " + ((List<System.Object>)pyReturn)[0]); */
+        /* } */
+        List<Ingredient> ingredients = new List<Ingredient>();
+        foreach(var ingredient in (List<System.Object>)pyReturn)
+        {
+            ingredients.Add(JsonUtility.FromJson<Ingredient>(ingredient.ToString()));
+        }
+
+        Debug.Log("First ingredient: " + ingredients[0]);
     }
 
     // Update is called once per frame
@@ -52,14 +65,8 @@ bob = MyClass('Hello from Python!')
         
     }
 
-    public static void ReadFile(){
-        string path = ".\\Assets\\Python\\pythonInterTest.py";
-        StreamReader sr = File.OpenText(path);
-        string s = "";
-        while ((s += sr.ReadLine()) != null)
-        {
-            Debug.Log(s);
-        }
+}
 
-    }
+public class TestClass {
+    public string test;
 }

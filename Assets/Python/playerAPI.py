@@ -1,26 +1,38 @@
-import socket
-from time import sleep
+class OperationList:
+    def __init__(self):
+        self.text = []
 
-host, port = "127.0.0.1", 25001
-data = "1,0,3"
+    def append(self, ingredient: str):
+        self.text.append(ingredient)
 
-# SOCK_STREAM means TCP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def get_self(self):
+        return self
 
-def open_connection():
-    sock.connect((host, port))
+opList = OperationList()
 
-def close_connection():
-    sock.close()
+def add_Flour():
+    opList.append('{ "type": 0, "name": "Flour" }')
 
-def forward(steps: int = 1):
-    sock.sendall(f"forward {steps}".encode("utf-8"))
-    sleep(0.5)
+def add_Sugar():
+    opList.append('{ "type": 1, "name": "Sugar" }')
 
-def turn(direction: str):
-    sock.sendall(f"turn {direction}".encode("utf-8"))
-    sleep(0.5)
+def add_Milk():
+    opList.append('{ "type": 2, "name": "Milk" }')
 
-def interact():
-    sock.sendall("interact".encode("utf-8"))
-    sleep(0.5)
+def add_Egg():
+    opList.append('{ "type": 3, "name": "Egg" }')
+
+def add_Frosting():
+    opList.append('{ "type": 4, "name": "Frosting" }')
+
+def add_Chocolate():
+    opList.append('{ "type": 5, "name": "Chocolate" }')
+
+def add_Vanilla():
+    opList.append('{ "type": 6, "name": "Vanilla" }')
+
+def add_Sprinkles():
+    opList.append('{ "type": 7, "name": "Sprinkles" }')
+
+def add_Cake():
+    opList.append('{ "type": 8, "name": "Cake" }')

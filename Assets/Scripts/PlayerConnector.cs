@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PocketPython;
-using static PlayerController;
+using static RobotController;
 
 public class PlayerConnector : MonoBehaviour
 {
-    private static PlayerController player;
+    private static RobotController player;
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player").GetComponent<PlayerController>();
+        player = GameObject.Find("Player").GetComponent<RobotController>();
         Debug.Log("Found player");
     }
 
