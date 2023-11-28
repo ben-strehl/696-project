@@ -14,8 +14,6 @@ public class PythonReader : MonoBehaviour
     void Start()
     {
         vm = new VM();
-        /* var mod = vm.NewModule("playerAPI"); */
-        /* vm.PyImport("playerAPI"); */
         StreamReader sr = File.OpenText(".\\Assets\\Python\\playerAPI.py");
         string s = "";
         string line;
@@ -23,8 +21,16 @@ public class PythonReader : MonoBehaviour
         {
             s += "\n" + line;
         }
-        /* vm.Exec(s, "playerAPI.py"); */
         vm.lazyModules["playerAPI"] = s;
+
+        RunProgramInThread();
+        /* ThreadStart ts = new ThreadStart(RunProgram); */
+        /* thread = new Thread(ts); */
+        /* thread.IsBackground = true; */
+        /* thread.Start(); */
+    }
+
+    void RunProgramInThread(){
         ThreadStart ts = new ThreadStart(RunProgram);
         thread = new Thread(ts);
         thread.IsBackground = true;
@@ -50,13 +56,13 @@ public class PythonReader : MonoBehaviour
         /* if(pyReturn.GetType() == typeof(List<System.Object>)){ */
             /* Debug.Log("String from python: " + ((List<System.Object>)pyReturn)[0]); */
         /* } */
-        List<Ingredient> ingredients = new List<Ingredient>();
-        foreach(var ingredient in (List<System.Object>)pyReturn)
-        {
-            ingredients.Add(JsonUtility.FromJson<Ingredient>(ingredient.ToString()));
-        }
+        /* List<string> ingredients = new List<string>(); */
+        /* foreach(var ingredient in (List<System.Object>)pyReturn) */
+        /* { */
+        /*     ingredients.Add(JsonUtility.FromJson<string>(ingredient.ToString())); */
+        /* } */
 
-        Debug.Log("First ingredient: " + ingredients[0]);
+        Debug.Log("First ingredient: " + pyReturn[0]);
     }
 
     // Update is called once per frame

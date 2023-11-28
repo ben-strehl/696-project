@@ -11,28 +11,28 @@ class OperationList:
 opList = OperationList()
 
 def add_Flour():
-    opList.append('{ "type": 0, "name": "Flour" }')
+    opList.append('Flour')
 
 def add_Sugar():
-    opList.append('{ "type": 1, "name": "Sugar" }')
+    opList.append('Sugar')
 
 def add_Milk():
-    opList.append('{ "type": 2, "name": "Milk" }')
+    opList.append('Milk')
 
 def add_Egg():
-    opList.append('{ "type": 3, "name": "Egg" }')
+    opList.append('Egg')
 
 def add_Frosting():
-    opList.append('{ "type": 4, "name": "Frosting" }')
+    opList.append('Frosting')
 
 def add_Chocolate():
-    opList.append('{ "type": 5, "name": "Chocolate" }')
+    opList.append('Chocolate')
 
 def add_Vanilla():
-    opList.append('{ "type": 6, "name": "Vanilla" }')
+    opList.append('Vanilla')
 
 def add_Sprinkles():
-    opList.append('{ "type": 7, "name": "Sprinkles" }')
+    opList.append('Sprinkles')
 
 def add_Cake():
-    opList.append('{ "type": 8, "name": "Cake" }')
+    opList.append('Cake')
