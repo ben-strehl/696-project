@@ -1,27 +1,38 @@
 using UnityEngine;
 
-public class Ingredient:MonoBehaviour
+public class Ingredient : MonoBehaviour
 {
     /* public IngredientType type; */
-    public string IngredientName;
-    private float moveSpeed = 5f;
-    public Vector2 goalPosition { get; set; }
+    public string ingredientName;
+    private float moveSpeed;  
+    public Vector2 goalPosition; 
+
+    public Ingredient(string name, Vector2 pos)
+    {
+        ingredientName = name;
+        goalPosition = pos;
+    }
 
     void Start()
     {
         goalPosition = (Vector2)transform.position;
+        moveSpeed = 1f;
     }
 
     void Update()
     {
-        var step =  moveSpeed * Time.deltaTime;
-        transform.position = Vector2.MoveTowards((Vector2)transform.position, goalPosition, step);
+        if(goalPosition != (Vector2)transform.position){
+            /* Debug.Log("Moving to (" + goalPosition.x + ", " + goalPosition.y + ")", gameObject); */
+            var step =  moveSpeed * Time.deltaTime;
+            /* Debug.Log("step: " + moveSpeed); */
+            transform.position = Vector2.MoveTowards((Vector2)transform.position, goalPosition, step);
+        }
     }
 
-    public override string ToString()
-    {
-        return IngredientName;
-    }
+    /* public override string ToString() */
+    /* { */
+    /*     return ingredientName; */
+    /* } */
 }
 
 /* public enum IngredientType */

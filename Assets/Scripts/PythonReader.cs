@@ -8,11 +8,14 @@ using System.Threading;
 public class PythonReader : MonoBehaviour
 {
     [SerializeField] private string path;
+    [SerializeField] private GameObject conveyerObject;
+    private ConveyerBelt conveyer;
     private Thread thread;
     private VM vm;
-    // Start is called before the first frame update
+
     void Start()
     {
+        conveyer = conveyerObject.GetComponent<ConveyerBelt>();
         vm = new VM();
         StreamReader sr = File.OpenText(".\\Assets\\Python\\playerAPI.py");
         string s = "";
@@ -24,10 +27,6 @@ public class PythonReader : MonoBehaviour
         vm.lazyModules["playerAPI"] = s;
 
         RunProgramInThread();
-        /* ThreadStart ts = new ThreadStart(RunProgram); */
-        /* thread = new Thread(ts); */
-        /* thread.IsBackground = true; */
-        /* thread.Start(); */
     }
 
     void RunProgramInThread(){
@@ -46,33 +45,11 @@ public class PythonReader : MonoBehaviour
             s += "\n" + line;
         }
         
-        /* Debug.Log("Read file"); */
         vm.Exec(s, "main.py");
-        /* Debug.Log("Ran file"); */
         var obj = vm.Eval("opList.get_self()");
 
-        /* Debug.Log("Object: " + obj); */
         var pyReturn = (List<System.Object>)vm.GetAttr(obj, "text");
-        /* if(pyReturn.GetType() == typeof(List<System.Object>)){ */
-            /* Debug.Log("String from python: " + ((List<System.Object>)pyReturn)[0]); */
-        /* } */
-        /* List<string> ingredients = new List<string>(); */
-        /* foreach(var ingredient in (List<System.Object>)pyReturn) */
-        /* { */
-        /*     ingredients.Add(JsonUtility.FromJson<string>(ingredient.ToString())); */
-        /* } */
-
-        Debug.Log("First ingredient: " + pyReturn[0]);
+        pyReturn.ForEach(ingredient => conveyer.AddToQueue(ingredient.ToString()));
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 }
 
-public class TestClass {
-    public string test;
-}

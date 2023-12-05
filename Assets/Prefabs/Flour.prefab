@@ -97,4 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5d3d10673298248acc74c4a76c2297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IngredientName: Flour
+  ingredientName: 

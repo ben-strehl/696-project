@@ -34,5 +34,6 @@ def add_Vanilla():
 def add_Sprinkles():
     opList.append('Sprinkles')
 
-def add_Cake():
-    opList.append('Cake')
+# def add_Cake():
+#     opList.append('Cake')
+
