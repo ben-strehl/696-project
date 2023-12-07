@@ -9,13 +9,13 @@ public class PythonReader : MonoBehaviour
 {
     [SerializeField] private string path;
     [SerializeField] private GameObject conveyerObject;
-    private ConveyerBelt conveyer;
+    private ConveyorBelt conveyor;
     private Thread thread;
     private VM vm;
 
     void Start()
     {
-        conveyer = conveyerObject.GetComponent<ConveyerBelt>();
+        conveyor = conveyerObject.GetComponent<ConveyorBelt>();
         vm = new VM();
         StreamReader sr = File.OpenText(".\\Assets\\Python\\playerAPI.py");
         string s = "";
@@ -49,7 +49,11 @@ public class PythonReader : MonoBehaviour
         var obj = vm.Eval("opList.get_self()");
 
         var pyReturn = (List<System.Object>)vm.GetAttr(obj, "text");
-        pyReturn.ForEach(ingredient => conveyer.AddToQueue(ingredient.ToString()));
+        /* pyReturn.ForEach(ingredient => conveyor.AddToQueue(ingredient.ToString())); */
+        foreach(var ingredient in pyReturn) {
+            conveyor.AddToQueue(ingredient.ToString());
+            Thread.Sleep(1000);
+        }
     }
 }
 

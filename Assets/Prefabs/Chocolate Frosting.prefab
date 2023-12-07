@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4145072002518459802}
   - component: {fileID: 4145072002518459801}
   m_Layer: 0
-  m_Name: Frosting
+  m_Name: Chocolate Frosting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a7665255d396fd84992106acf430ea2e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 47c620518bb7a2840a006a902e9031af, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,5 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5d3d10673298248acc74c4a76c2297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientName: Frosting
+  ingredientName: Chocolate Frosting
   goalPosition: {x: 0, y: 0}

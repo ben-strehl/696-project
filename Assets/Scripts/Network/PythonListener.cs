@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 using System.Threading;
 using System.Collections.Generic;
-using static RobotController;
+using static Robot;
 
 public class PythonListener : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class PythonListener : MonoBehaviour
     private TcpListener server;
     private TcpClient client;
     private bool running;
-    private static RobotController robot;
+    private static Robot robot;
     private static Queue<string> commandQueue = new Queue<string>();
 
     void Start()
@@ -23,7 +23,7 @@ public class PythonListener : MonoBehaviour
         thread = new Thread(ts);
         thread.Start();
 
-        robot = GameObject.Find("Player").GetComponent<RobotController>();
+        robot = GameObject.Find("Player").GetComponent<Robot>();
     }
 
     void GetData()

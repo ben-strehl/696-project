@@ -4,18 +4,18 @@ public class Ingredient : MonoBehaviour
 {
     /* public IngredientType type; */
     public string ingredientName;
-    private float moveSpeed;  
     public Vector2 goalPosition; 
+    private float moveSpeed;  
 
-    public Ingredient(string name, Vector2 pos)
-    {
-        ingredientName = name;
-        goalPosition = pos;
-    }
+    /* public Ingredient(string name, Vector2 pos) */
+    /* { */
+    /*     ingredientName = name; */
+    /*     goalPosition = pos; */
+    /* } */
 
     void Start()
     {
-        goalPosition = (Vector2)transform.position;
+        /* goalPosition = (Vector2)transform.position; */
         moveSpeed = 1f;
     }
 

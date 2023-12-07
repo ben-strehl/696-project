@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class RobotController : MonoBehaviour
+public class Robot : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private int[] facing = {1, 0};

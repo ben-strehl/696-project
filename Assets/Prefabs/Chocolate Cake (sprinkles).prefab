@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8145710296043887138}
   - component: {fileID: 8145710296043887137}
   m_Layer: 0
-  m_Name: Chocolate Cake (sprinkles)
+  m_Name: Chocolate Cake (Sprinkles)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,4 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5d3d10673298248acc74c4a76c2297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientName: 
+  ingredientName: Chocolate Cake (Sprinkles)
+  goalPosition: {x: 0, y: 0}
