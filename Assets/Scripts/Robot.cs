@@ -3,125 +3,149 @@ using System.Collections.Generic;
 
 public class Robot : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private int[] facing = {1, 0};
-    Vector2 goalPosition;
-    private static Queue<Action> actionQueue = new Queue<Action>();
-    private bool isMoving;
-    private int[,] transformMatrix = {{1, -1}, {1, 1}};
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private Sprite upSprite;
+    [SerializeField] private Sprite downSprite;
+    [SerializeField] private Sprite leftSprite;
+    [SerializeField] private Sprite rightSprite;
+    private Vector2 goalPosition;
+    private State state;
+    private ConveyorBelt conveyor;
+    private Oven oven;
+    private MixingTable table;
+    private GameObject ingredient;
 
     void Start() 
     {
-        isMoving = false;
+        state = State.Idle;
+        conveyor = (ConveyorBelt)FindObjectOfType(typeof(ConveyorBelt));
+        oven = (Oven)FindObjectOfType(typeof(Oven));
+        table = (MixingTable)FindObjectOfType(typeof(MixingTable));
     }
+
     void Update()
     {
-        // if(isMoving){
-        //     var step =  moveSpeed * Time.deltaTime;
+        switch(state) {
+            case State.Idle:
+                Idle();
+                break;
+            case State.Retrieving:
+                Retrieving();
+                break;
+            case State.Moving:
+                Moving();
+                break;
+            /* case State.WaitingForOven: */
+            /* case State.WaitingForTable: */
+            /*     return; */
+        }
 
-        //     transform.position = Vector2.MoveTowards((Vector2)transform.position, goalPosition, step);
+        Vector2 currentPosition = transform.position;
 
-        //     if(Vector2.Distance((Vector2)transform.position, goalPosition) == 0f){
-        //         isMoving = false;
-        //     }
-        // } else {
-        //     float horizontalInput = Input.GetAxis("Horizontal");
-        //     float verticalInput = Input.GetAxis("Vertical");
-
-        //     if(horizontalInput != 0) {
-        //         goalPosition.x = transform.position.x + ((horizontalInput > 0) ? 0.5f : -0.5f);
-        //         goalPosition.y = transform.position.y + ((horizontalInput > 0) ? 0.25f : -0.25f);
-        //     } else if(verticalInput != 0) {
-        //         goalPosition.x = transform.position.x + ((verticalInput > 0) ? -0.5f : 0.5f);
-        //         goalPosition.y = transform.position.y + ((verticalInput > 0) ? 0.25f : -0.25f);
-        //     } else {
-        //         goalPosition = (Vector2)transform.position;
-        //     }
-
-        //     isMoving = true;
-
-        //     // Debug.Log($"Moving player with goal postion ({goalPosition.x}, {goalPosition.y})");
-        // }
-
-        if(isMoving){
+        if(goalPosition != (Vector2)transform.position){
             var step =  moveSpeed * Time.deltaTime;
-
             transform.position = Vector2.MoveTowards((Vector2)transform.position, goalPosition, step);
+        }
 
-            if(Vector2.Distance((Vector2)transform.position, goalPosition) == 0f){
-                isMoving = false;
+        Vector2 move = (Vector2)transform.position - currentPosition;
+        var spriteRend = GetComponent<SpriteRenderer>();
+
+        if(Mathf.Abs(move.x) > Mathf.Abs(move.y)){
+            if(move.x > 0f) {
+                spriteRend.sprite = rightSprite;
+            } else if(move.x < 0f) {
+                spriteRend.sprite = leftSprite;
             }
         } else {
-            if(actionQueue.TryDequeue(out Action action)) {
-                switch(action.actionType){
-                    case ActionType.Forward:
-                        Forward(int.Parse(action.args[0]));
-                        break;
-                    case ActionType.Turn:
-                        Turn(action.args[0]);
-                        break;
-                    case ActionType.Interact:
-                        Interact();
-                        break;
-                    default:
-                        //Shouldn't be possible to reach this
-                        Debug.Log("Invalid command at player");
-                        break;
+            if(move.y > 0f) {
+                spriteRend.sprite = upSprite;
+            } else if(move.y < 0f) {
+                spriteRend.sprite = downSprite;
+            }
+        }
+
+    }
+
+    private void Idle() {
+        goalPosition = transform.position;
+
+        if(conveyor.IsEmpty()) {
+            Debug.Log("Conveyor empty", gameObject);
+            return;
+        }
+
+        state = State.Retrieving;
+        Debug.Log("Going to Retrieving");
+    }
+
+    private void Retrieving() {
+        ingredient = conveyor.GetAt(0);
+
+        if(ingredient is null) {
+            Debug.LogWarning("Null ingredient", gameObject);
+        }
+
+        goalPosition = new Vector2(ingredient.transform.position.x, ingredient.transform.position.y + 1);
+
+        if(goalPosition == (Vector2)transform.position) {
+            conveyor.RemoveAt(0);
+            state = State.Moving;
+        }
+    }
+
+    private void Moving() {
+        Ingredient ingComp = ingredient.GetComponent<Ingredient>();
+        ingComp.isGrabbed = true;
+
+        ingredient.transform.position = transform.position - new Vector3(0f, 1f, 0f);
+
+        switch(ingComp.ingredientName) {
+            case "Flour":
+            case "Milk":
+            case "Sugar":
+            case "Egg":
+            case "Frosting":
+            case "Chocolate":
+                goalPosition = new Vector2(table.transform.position.x, table.transform.position.y - 1);
+                if(goalPosition == (Vector2)transform.position) {
+                    table.Add(ingredient);
                 }
-            }
+                break;
+            case "Dough":
+                goalPosition = new Vector2(oven.transform.position.x, oven.transform.position.y - 1);
+                if(goalPosition == (Vector2)transform.position) {
+                    oven.Add(ingredient);
+                }
+                break;
+            default:
+                state = State.Idle;
+                break;
         }
     }
 
-    void Forward(int steps) {
-        int xDirection = facing[0] * transformMatrix[0,0] + facing[1] * transformMatrix[0,1];
-        int yDirection = facing[0] * transformMatrix[1,0] + facing[1] * transformMatrix[1,1];
-        goalPosition.x = transform.position.x + (steps * xDirection * 0.5f);
-        goalPosition.y = transform.position.y + (steps * yDirection * 0.25f);
-
-        isMoving = true;
+    public void WaitingForOven(GameObject ingredientObj) {
+        Debug.Log("WaitingForOven invoked", gameObject);
+        ingredient = ingredientObj;
+        state = State.Moving;
     }
 
-    void Turn(string direction) {
-        if(direction == "left"){
-            if(facing[0] == 0){
-                facing[0] = -facing[1];
-                facing[1] = 0;
-            } else {
-                facing[1] = facing[0];
-                facing[0] = 0;
-            }
+    public void WaitingForTable(GameObject ingredientObj) {
+        Debug.Log("WaitingForTable invoked", gameObject);
+        if(ingredientObj != null) {
+            ingredient = ingredientObj;
+            state = State.Moving;
+            Debug.Log("Going to Moving", gameObject);
         } else {
-            if(facing[0] == 0){
-                facing[0] = facing[1];
-                facing[1] = 0;
-            } else {
-                facing[1] = -facing[0];
-                facing[0] = 0;
-            }
+            state = State.Idle;
+            Debug.Log("Going to Idle", gameObject);
         }
     }
 
-    void Interact() {
-        Debug.Log("Interacting");
-    }
-
-    public void EnqueueAction(Action action){
-        actionQueue.Enqueue(action);
-    }
-
-    public class Action {
-        public Action(ActionType actionType, string[] args) {
-            this.actionType = actionType;
-            this.args = args;
-        }
-
-        public ActionType actionType;
-        public string[] args;
-    }
-
-    public enum ActionType {
-        Forward,
-        Turn,
-        Interact,
+    private enum State {
+        Idle,
+        Retrieving,
+        Moving,
+        WaitingForOven,
+        WaitingForTable
     }
 }

@@ -5,6 +5,9 @@ class OperationList:
     def append(self, ingredient: str):
         self.text.append(ingredient)
 
+    def extend(ingredients: list):
+        self.text += ingredients
+
     def get_self(self):
         return self
 
@@ -33,6 +36,9 @@ def add_Vanilla():
 
 def add_Sprinkles():
     opList.append('Sprinkles')
+
+def add_Custom(ingredients: list):
+    opList.extend(ingredients)
 
 # def add_Cake():
 #     opList.append('Cake')

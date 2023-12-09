@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class MixingTable : MonoBehaviour
 {
-    [SerializeField]private GameObject chocolateFrostingPrefab;
-    [SerializeField]private GameObject doughPrefab;
+    private delegate void HandToRobot(GameObject ingredientObj);
+    [SerializeField] private GameObject chocolateFrostingPrefab;
+    [SerializeField] private GameObject doughPrefab;
     private List<GameObject> ingredients;
+    private HandToRobot handToRobot;
 
     void Start()
     {
         ingredients = new List<GameObject>();
+        /* combinedEvent = new CombineEvent(); */
+        /* combinedEvent.AddListener(FindObjectOfType<Robot>().WaitingForTable); */
+        handToRobot = FindObjectOfType<Robot>().WaitingForTable;
     }
 
     void Update()
@@ -29,10 +35,11 @@ public class MixingTable : MonoBehaviour
             case "Chocolate":
                 ingredient.GetComponent<SpriteRenderer>().enabled = false;
                 ingredients.Add(ingredient);
+                Debug.Log("Added to mixer: " + name, gameObject);
                 Combine();
                 break;
             default:
-                Debug.LogWarning("Attempt to add invalid ingredient to mixer: " + name);
+                Debug.LogWarning("Attempt to add invalid ingredient to mixer: " + name, gameObject);
                 break;
         }
     }
@@ -68,13 +75,13 @@ public class MixingTable : MonoBehaviour
                     chocolates.Add(i);
                     break;
                 default:
-                    Debug.LogError("Invalid ingredient in mixer");
+                    Debug.LogError("Invalid ingredient in mixer", gameObject);
                     break;
             }
         }
 
         if(frostings.Count > 0 && chocolates.Count > 0) {
-            Instantiate(chocolateFrostingPrefab, transform.position, Quaternion.identity);
+            handToRobot(Instantiate(chocolateFrostingPrefab, transform.position, Quaternion.identity));
 
             Destroy(ingredients[frostings[0]]);
             ingredients.RemoveAt(frostings[0]);
@@ -82,9 +89,10 @@ public class MixingTable : MonoBehaviour
             ingredients.RemoveAt(chocolates[0]);
 
             Debug.Log("Made chocolate frosting", gameObject);
+            return;
 
         } else if(flours.Count > 0 && sugars.Count > 0 && milks.Count > 0 && eggs.Count > 0) {
-            Instantiate(doughPrefab, transform.position, Quaternion.identity);
+            handToRobot(Instantiate(doughPrefab, transform.position, Quaternion.identity));
 
             Destroy(ingredients[flours[0]]);
             ingredients.RemoveAt(flours[0]);
@@ -96,6 +104,9 @@ public class MixingTable : MonoBehaviour
             ingredients.RemoveAt(eggs[0]);
 
             Debug.Log("Made dough", gameObject);
+            return;
         }
+
+        handToRobot(null);
     }
 }

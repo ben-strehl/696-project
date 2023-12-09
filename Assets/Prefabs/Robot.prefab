@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8445661170252971810}
   - component: {fileID: 8445661170252971821}
-  - component: {fileID: 8445661170252971823}
   - component: {fileID: 8445661170252971811}
   m_Layer: 0
   m_Name: Robot
@@ -86,27 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &8445661170252971823
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8445661170252971822}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!114 &8445661170252971811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,4 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  facing: 0100000000000000
+  upSprite: {fileID: 21300000, guid: aa9682303887ce943b6be1137be06e7f, type: 3}
+  downSprite: {fileID: 21300000, guid: a91622d8e2c25314f90f393fc474fe1c, type: 3}
+  leftSprite: {fileID: 21300000, guid: 47fdabcab00c8c94398481cf95667ccd, type: 3}
+  rightSprite: {fileID: 21300000, guid: 83452121d82d54640bbd5e531021c9d5, type: 3}

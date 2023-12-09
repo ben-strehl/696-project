@@ -2707,7 +2707,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &340961774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2920,6 +2920,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1897376692853073961, guid: ca10a019788f61b40b9c4ea18a3c130b, type: 3}
   m_PrefabInstance: {fileID: 1897376694194780506}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1547842895 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8445661170252971811, guid: 357f0bbdacaa92b47a3d075871857571, type: 3}
+  m_PrefabInstance: {fileID: 1608017818}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a202b100a1d88c84eb04b4d237072987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1608017818
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2971,11 +2982,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8445661170252971811, guid: 357f0bbdacaa92b47a3d075871857571, type: 3}
+      propertyPath: moveSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8445661170252971822, guid: 357f0bbdacaa92b47a3d075871857571, type: 3}
       propertyPath: m_Name
       value: Robot
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8445661170252971823, guid: 357f0bbdacaa92b47a3d075871857571, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 357f0bbdacaa92b47a3d075871857571, type: 3}
 --- !u!1001 &1897376694194780506
 PrefabInstance:
@@ -2990,7 +3006,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1897376692853073961, guid: ca10a019788f61b40b9c4ea18a3c130b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1897376692853073966, guid: ca10a019788f61b40b9c4ea18a3c130b, type: 3}
       propertyPath: m_RootOrder
@@ -3048,6 +3064,34 @@ PrefabInstance:
     - target: {fileID: 5229207377974632321, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
       propertyPath: m_Name
       value: Oven
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229207377974632326, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
+      propertyPath: bakedEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229207377974632326, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
+      propertyPath: bakedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229207377974632326, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
+      propertyPath: bakedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1547842895}
+    - target: {fileID: 5229207377974632326, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
+      propertyPath: bakedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229207377974632326, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
+      propertyPath: bakedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: WaitingForOven
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229207377974632326, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
+      propertyPath: bakedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Robot, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5229207377974632326, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
+      propertyPath: bakedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5229207377974632327, guid: 8797e58b020ba8948bedbe6c7c710b3f, type: 3}
       propertyPath: m_RootOrder
@@ -3108,7 +3152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5716243806115222475, guid: f065350875ac82e4a83c110bc38156d2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5716243806115222476, guid: f065350875ac82e4a83c110bc38156d2, type: 3}
       propertyPath: conveyerObject
@@ -3214,6 +3258,34 @@ PrefabInstance:
     - target: {fileID: 8665724721775304308, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665724721775304311, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
+      propertyPath: combinedEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665724721775304311, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
+      propertyPath: combinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665724721775304311, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
+      propertyPath: combinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1547842895}
+    - target: {fileID: 8665724721775304311, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
+      propertyPath: combinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665724721775304311, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
+      propertyPath: combinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: WaitingForTable
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665724721775304311, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
+      propertyPath: combinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Robot, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8665724721775304311, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}
+      propertyPath: combinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7bcccbc8a547b06448086953b4dee10f, type: 3}

@@ -21,15 +21,22 @@ public class ConveyorBelt : MonoBehaviour
 
     private Queue<string> ingredientsToAdd;
     private List<GameObject> ingredientList;
+    private float cooldown;
 
     void Start(){
         ingredientsToAdd = new Queue<string>();
         ingredientList = new List<GameObject>();
+        cooldown = 0f;
     }
 
     void Update(){
+        if(cooldown > 0f) {
+            cooldown = Mathf.Clamp(cooldown - Time.deltaTime, 0f, 1f);
+            return;
+        }
+
         if(ingredientsToAdd.TryDequeue(out string ingredient)) {
-            /* Debug.Log("Queueing: " + ingredient); */
+            cooldown = 1f;
             Add(ingredient);
         }
     }
@@ -38,9 +45,22 @@ public class ConveyorBelt : MonoBehaviour
         ingredientsToAdd.Enqueue(ingredient);
     }
 
+    public bool IsEmpty() {
+        return ingredientList.Count == 0;
+    }
+
+    public GameObject GetAt(int index) {
+        return ingredientList[index];
+    }
+
+    public void RemoveAt(int index) {
+        ingredientList.RemoveAt(index);
+    }
+
     private void Add(string name)
     {
-        Debug.Log("Adding: " + name);
+
+        Debug.Log("Adding to conveyor: " + name, gameObject);
         GameObject newIngredient = null;
 
         switch(name) {
@@ -89,7 +109,7 @@ public class ConveyorBelt : MonoBehaviour
                         + new Vector2(2, 0), Quaternion.identity);
                 break;
             default:
-                Debug.LogWarning("Invalid ingredient type");
+                Debug.LogWarning("Invalid ingredient type", gameObject);
                 break;
         }
 
@@ -100,10 +120,10 @@ public class ConveyorBelt : MonoBehaviour
             ingredientList.ForEach(ingredient => {
                     var ing = ingredient.GetComponent<Ingredient>();
                     if(ing != null) {
-                        Debug.Log("Moving: " + ing.ingredientName);
+                        /* Debug.Log("Moving: " + ing.ingredientName); */
                         ing.goalPosition.x -= 1;
                     } else {
-                        Debug.LogWarning("Ingredient component not found");
+                        Debug.LogWarning("Ingredient component not found", gameObject);
                     }
                 });
             /* newIngredient.transform.position = transform.position; */

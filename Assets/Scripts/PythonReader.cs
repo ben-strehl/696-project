@@ -52,7 +52,7 @@ public class PythonReader : MonoBehaviour
         /* pyReturn.ForEach(ingredient => conveyor.AddToQueue(ingredient.ToString())); */
         foreach(var ingredient in pyReturn) {
             conveyor.AddToQueue(ingredient.ToString());
-            Thread.Sleep(1000);
+            /* Thread.Sleep(1000); */
         }
     }
 }
