@@ -35,9 +35,9 @@ public class Robot : MonoBehaviour
             case State.Moving:
                 Moving();
                 break;
-            /* case State.WaitingForOven: */
-            /* case State.WaitingForTable: */
-            /*     return; */
+            case State.WaitingForOven: 
+            case State.WaitingForTable:
+                return; 
         }
 
         Vector2 currentPosition = transform.position;
@@ -117,6 +117,14 @@ public class Robot : MonoBehaviour
                     oven.Add(ingredient);
                 }
                 break;
+            case "Chocolate Frosting":
+            case "Cake (Unfrosted)":
+                Vector2 conveyorLead = conveyor.GetAt(0).transform.position;
+                goalPosition = new Vector2(conveyorLead.x + 1, conveyorLead.y + 1);
+                if(goalPosition == (Vector2)transform.position) {
+                    conveyor.AddToFront(ingredient);
+                }
+                break;
             default:
                 state = State.Idle;
                 break;
@@ -134,10 +142,8 @@ public class Robot : MonoBehaviour
         if(ingredientObj != null) {
             ingredient = ingredientObj;
             state = State.Moving;
-            Debug.Log("Going to Moving", gameObject);
         } else {
             state = State.Idle;
-            Debug.Log("Going to Idle", gameObject);
         }
     }
 

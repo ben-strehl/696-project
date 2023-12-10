@@ -45,6 +45,10 @@ public class ConveyorBelt : MonoBehaviour
         ingredientsToAdd.Enqueue(ingredient);
     }
 
+    public void AddToFront(GameObject ingredient) {
+        ingredientList.Insert(0, ingredient);
+    }
+
     public bool IsEmpty() {
         return ingredientList.Count == 0;
     }
@@ -74,6 +78,10 @@ public class ConveyorBelt : MonoBehaviour
                  break;
             case "Egg":
                 newIngredient = Instantiate(eggPrefab, (Vector2)transform.position
+                        + new Vector2(2, 0), Quaternion.identity);
+                 break;
+            case "Sugar":
+                newIngredient = Instantiate(sugarPrefab, (Vector2)transform.position
                         + new Vector2(2, 0), Quaternion.identity);
                  break;
             case "Frosting":

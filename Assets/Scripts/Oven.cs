@@ -1,21 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-
-[System.Serializable]
-public class BakeEvent : UnityEvent<GameObject>
-{}
 
 public class Oven : MonoBehaviour
 {
-    [SerializeField] private BakeEvent bakedEvent;
+    private delegate void HandToRobot(GameObject ingredientObj);
     [SerializeField] private GameObject cakeUnfrostedPrefab;
+    private HandToRobot handToRobot;
     /* private GameObject ingredient; */
 
     void Start()
     {
-        bakedEvent = new BakeEvent();
+        handToRobot = FindObjectOfType<Robot>().WaitingForTable;
     }
 
     void Update()
@@ -29,7 +25,7 @@ public class Oven : MonoBehaviour
             case "Dough":
                 ingredient.GetComponent<SpriteRenderer>().enabled = false;
                 Destroy(ingredient);
-                bakedEvent.Invoke(Instantiate(cakeUnfrostedPrefab, transform.position, Quaternion.identity));
+                handToRobot(Instantiate(cakeUnfrostedPrefab, transform.position, Quaternion.identity));
                 Debug.Log("Baked dough", gameObject);
                 break;
             default:
