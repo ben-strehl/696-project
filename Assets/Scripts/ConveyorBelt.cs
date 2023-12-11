@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,12 +54,79 @@ public class ConveyorBelt : MonoBehaviour
         return ingredientList.Count == 0;
     }
 
+    public int IndexOf(GameObject ingredient) {
+        return ingredientList.IndexOf(ingredient);
+    }
+
     public GameObject GetAt(int index) {
         return ingredientList[index];
     }
 
     public void RemoveAt(int index) {
         ingredientList.RemoveAt(index);
+    }
+
+    public bool Exists(Predicate<GameObject> predicate) {
+        return ingredientList.Exists(predicate);
+    }
+
+    public GameObject Find(Predicate<GameObject> predicate) {
+        return ingredientList.Find(predicate);
+    }
+
+    public void Remove(GameObject ingredient) {
+        ingredientList.Remove(ingredient);
+    }
+
+    public GameObject Combine(GameObject ingredient, int ingIndex) {
+        Ingredient ingComp = ingredient.GetComponent<Ingredient>();
+        Ingredient ingInListComp = ingredientList[ingIndex].GetComponent<Ingredient>();
+        GameObject combinedIng = null;
+        
+        switch(ingComp.ingredientName) {
+            case "Cake (Unfrosted)":
+                if(ingInListComp.ingredientName == "Frosting") {
+                    combinedIng = Instantiate(cakePrefab, ingredient.transform.position, Quaternion.identity);
+                }
+                if(ingInListComp.ingredientName == "Chocolate Frosting") {
+                    combinedIng = Instantiate(chocolateCakePrefab, ingredient.transform.position, Quaternion.identity);
+                }
+                break;
+            case "Frosting":
+                if(ingInListComp.ingredientName == "Cake (Unfrosted)") {
+                    combinedIng = Instantiate(cakePrefab, ingredient.transform.position, Quaternion.identity);
+                }
+                break;
+            case "Chocolate Frosting":
+                if(ingInListComp.ingredientName == "Cake (Unfrosted)") {
+                    combinedIng = Instantiate(chocolateCakePrefab, ingredient.transform.position, Quaternion.identity);
+                }
+                break;
+            case "Cake":
+                if(ingInListComp.ingredientName == "Sprinkles") {
+                    combinedIng = Instantiate(cakeSprinklesPrefab, ingredient.transform.position, Quaternion.identity);
+                }
+                break;
+            case "Chocolate Cake":
+                if(ingInListComp.ingredientName == "Sprinkles") {
+                    combinedIng = Instantiate(chocolateCakeSprinklesPrefab, ingredient.transform.position, Quaternion.identity);
+                }
+                break;
+            default:
+                Debug.LogError("Conveyor cannot combine this ingredient", gameObject);
+                return ingredient;
+        }
+
+        if(combinedIng != null) {
+            Destroy(ingredient);
+            Destroy(ingredientList[ingIndex]);
+            ingredientList.RemoveAt(ingIndex);
+            return combinedIng;
+        }
+
+        Debug.LogError("Invalid ingredient chosen from conveyor");
+        return ingredient;
+
     }
 
     private void Add(string name)

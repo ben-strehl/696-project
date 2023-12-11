@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class Robot : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Sprite upSprite;
     [SerializeField] private Sprite downSprite;
     [SerializeField] private Sprite leftSprite;
@@ -13,7 +14,12 @@ public class Robot : MonoBehaviour
     private ConveyorBelt conveyor;
     private Oven oven;
     private MixingTable table;
+    private DeliveryTruck truck;
     private GameObject ingredient;
+
+    private Predicate<GameObject> frostingQuery;
+    private Predicate<GameObject> cakeQuery;
+    private Predicate<GameObject> sprinklesQuery;
 
     void Start() 
     {
@@ -21,6 +27,11 @@ public class Robot : MonoBehaviour
         conveyor = (ConveyorBelt)FindObjectOfType(typeof(ConveyorBelt));
         oven = (Oven)FindObjectOfType(typeof(Oven));
         table = (MixingTable)FindObjectOfType(typeof(MixingTable));
+        truck = (DeliveryTruck)FindObjectOfType(typeof(DeliveryTruck));
+        frostingQuery = x => x.GetComponent<Ingredient>().ingredientName == "Frosting"
+            || x.GetComponent<Ingredient>().ingredientName == "Chocolate Frosting";
+        cakeQuery = x => x.GetComponent<Ingredient>().ingredientName == "Cake (Unfrosted)";
+        sprinklesQuery = x => x.GetComponent<Ingredient>().ingredientName == "Sprinkles";
     }
 
     void Update()
@@ -75,7 +86,6 @@ public class Robot : MonoBehaviour
         }
 
         state = State.Retrieving;
-        Debug.Log("Going to Retrieving");
     }
 
     private void Retrieving() {
@@ -100,11 +110,20 @@ public class Robot : MonoBehaviour
         ingredient.transform.position = transform.position - new Vector3(0f, 1f, 0f);
 
         switch(ingComp.ingredientName) {
+            case "Frosting":
+                GameObject unfrostedCake = conveyor.Find(cakeQuery);
+                if(unfrostedCake != null) {
+                    goalPosition = new Vector2(unfrostedCake.transform.position.x, unfrostedCake.transform.position.y + 1);
+                    if(goalPosition == (Vector2)transform.position) {
+                        ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(unfrostedCake));
+                        return;
+                    }
+                }
+                goto case "Chocolate";
             case "Flour":
             case "Milk":
             case "Sugar":
             case "Egg":
-            case "Frosting":
             case "Chocolate":
                 goalPosition = new Vector2(table.transform.position.x, table.transform.position.y - 1);
                 if(goalPosition == (Vector2)transform.position) {
@@ -118,12 +137,65 @@ public class Robot : MonoBehaviour
                 }
                 break;
             case "Chocolate Frosting":
-            case "Cake (Unfrosted)":
-                Vector2 conveyorLead = conveyor.GetAt(0).transform.position;
-                goalPosition = new Vector2(conveyorLead.x + 1, conveyorLead.y + 1);
+                GameObject cake = conveyor.Find(cakeQuery);
+                if(conveyor.IsEmpty()) {
+                    goalPosition = new Vector2(conveyor.transform.position.x, conveyor.transform.position.y + 1);
+                } else if(cake != null) {
+                    goalPosition = new Vector2(cake.transform.position.x, cake.transform.position.y + 1);
+                    if(goalPosition == (Vector2)transform.position) {
+                        ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(cake));
+                        return;
+                    }
+                } else {
+                    Vector2 conveyorLead = conveyor.GetAt(0).transform.position;
+                    goalPosition = new Vector2(conveyorLead.x + 1, conveyorLead.y + 1);
+                }
                 if(goalPosition == (Vector2)transform.position) {
                     conveyor.AddToFront(ingredient);
+                    state = State.Idle;
                 }
+                break;
+            case "Cake (Unfrosted)":
+                GameObject frosting = conveyor.Find(frostingQuery);
+                if(conveyor.IsEmpty()) {
+                    goalPosition = new Vector2(conveyor.transform.position.x, conveyor.transform.position.y + 1);
+                } else if(frosting != null) {
+                    goalPosition = new Vector2(frosting.transform.position.x, frosting.transform.position.y + 1);
+                    if(goalPosition == (Vector2)transform.position) {
+                        ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(frosting));
+                        return;
+                    }
+                } else {
+                    Vector2 conveyorLead = conveyor.GetAt(0).transform.position;
+                    goalPosition = new Vector2(conveyorLead.x + 1, conveyorLead.y + 1);
+                }
+                if(goalPosition == (Vector2)transform.position) {
+                    conveyor.AddToFront(ingredient);
+                    state = State.Idle;
+                }
+                break;
+            case "Chocolate Cake":
+            case "Cake":
+                GameObject sprinkles = conveyor.Find(sprinklesQuery);
+                if(conveyor.IsEmpty()) {
+                    goalPosition = new Vector2(conveyor.transform.position.x, conveyor.transform.position.y + 1);
+                } else if(sprinkles != null) {
+                    goalPosition = new Vector2(sprinkles.transform.position.x, sprinkles.transform.position.y + 1);
+                    if(goalPosition == (Vector2)transform.position) {
+                        ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(sprinkles));
+                        return;
+                    }
+                } else {
+                    Vector2 conveyorLead = conveyor.GetAt(0).transform.position;
+                    goalPosition = new Vector2(conveyorLead.x + 1, conveyorLead.y + 1);
+                }
+                if(goalPosition == (Vector2)transform.position) {
+                    conveyor.AddToFront(ingredient);
+                    state = State.Idle;
+                }
+                break;
+            case "Chocolate Cake (Sprinkles)":
+            case "Cake (Sprinkles)":
                 break;
             default:
                 state = State.Idle;
