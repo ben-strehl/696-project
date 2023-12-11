@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 public class Robot : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed;
     [SerializeField] private Sprite upSprite;
     [SerializeField] private Sprite downSprite;
     [SerializeField] private Sprite leftSprite;
@@ -77,11 +78,23 @@ public class Robot : MonoBehaviour
 
     }
 
+    public void Reset() {
+        if(ingredient != null) {
+            if(!ingredient.IsDestroyed()) {
+                Destroy(ingredient);
+            }
+            ingredient = null;
+        }
+        state = State.Idle;
+        transform.position = new Vector3(0f, -2.5f, 0f);
+        GetComponent<SpriteRenderer>().sprite = downSprite;
+    }
+
     private void Idle() {
         goalPosition = transform.position;
 
         if(conveyor.IsEmpty()) {
-            Debug.Log("Conveyor empty", gameObject);
+            // Debug.Log("Conveyor empty", gameObject);
             return;
         }
 
@@ -89,18 +102,21 @@ public class Robot : MonoBehaviour
     }
 
     private void Retrieving() {
-        ingredient = conveyor.GetAt(0);
 
-        if(ingredient is null) {
-            Debug.LogWarning("Null ingredient", gameObject);
+        if(conveyor.GetAt(0).transform.position.x <= conveyor.transform.position.x){
+            ingredient = conveyor.GetAt(0);
+            if(ingredient == null) {
+                Debug.LogWarning("Null ingredient", gameObject);
+            } else {
+                goalPosition = new Vector2(ingredient.transform.position.x, ingredient.transform.position.y + 1);
+
+                if(goalPosition == (Vector2)transform.position) {
+                    conveyor.RemoveAt(0);
+                    state = State.Moving;
+                }
+            }
         }
 
-        goalPosition = new Vector2(ingredient.transform.position.x, ingredient.transform.position.y + 1);
-
-        if(goalPosition == (Vector2)transform.position) {
-            conveyor.RemoveAt(0);
-            state = State.Moving;
-        }
     }
 
     private void Moving() {
@@ -108,6 +124,15 @@ public class Robot : MonoBehaviour
         ingComp.isGrabbed = true;
 
         ingredient.transform.position = transform.position - new Vector3(0f, 1f, 0f);
+
+        if(truck.GetGoals().Contains(ingComp.ingredientName)) {
+            goalPosition = truck.transform.position;
+            if(goalPosition == (Vector2)transform.position) {
+                truck.TurnIn(ingredient);
+                state = State.Idle;
+            }
+            return;
+        }
 
         switch(ingComp.ingredientName) {
             case "Frosting":
@@ -193,9 +218,6 @@ public class Robot : MonoBehaviour
                     conveyor.AddToFront(ingredient);
                     state = State.Idle;
                 }
-                break;
-            case "Chocolate Cake (Sprinkles)":
-            case "Cake (Sprinkles)":
                 break;
             default:
                 state = State.Idle;

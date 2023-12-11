@@ -5,7 +5,7 @@ class OperationList:
     def append(self, ingredient: str):
         self.text.append(ingredient)
 
-    def extend(ingredients: list):
+    def extend(self, ingredients: list):
         self.text += ingredients
 
     def get_self(self):

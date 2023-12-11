@@ -33,4 +33,8 @@ public class Oven : MonoBehaviour
                 break;
         }
     }
+
+    public void Reset() {
+        
+    }
 }

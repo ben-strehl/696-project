@@ -68,6 +68,21 @@ public class MixingTable : MonoBehaviour
         Combine();
     }
 
+    public void Reset() {
+        flours.ForEach(x => Destroy(x));
+        flours.Clear();
+        sugars.ForEach(x => Destroy(x));
+        sugars.Clear();
+        frostings.ForEach(x => Destroy(x));
+        frostings.Clear();
+        milks.ForEach(x => Destroy(x));
+        milks.Clear();
+        eggs.ForEach(x => Destroy(x));
+        eggs.Clear();
+        chocolates.ForEach(x => Destroy(x));
+        chocolates.Clear();
+    }
+
     private void Combine() {
         // var flours = new List<int>();
         // var sugars = new List<int>();

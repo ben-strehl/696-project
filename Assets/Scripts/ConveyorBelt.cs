@@ -9,12 +9,12 @@ public class ConveyorBelt : MonoBehaviour
     [SerializeField]private GameObject sugarPrefab;
     [SerializeField]private GameObject milkPrefab;
     [SerializeField]private GameObject eggPrefab;
-    /* [SerializeField]private GameObject doughPrefab; */
+    [SerializeField]private GameObject doughPrefab; 
     [SerializeField]private GameObject frostingPrefab;
-    /* [SerializeField]private GameObject chocolateFrostingPrefab; */
+    [SerializeField]private GameObject chocolateFrostingPrefab; 
     [SerializeField]private GameObject chocolatePrefab;
     [SerializeField]private GameObject sprinklesPrefab;
-    /* [SerializeField]private GameObject cakeUnfrostedPrefab; */
+    [SerializeField]private GameObject cakeUnfrostedPrefab; 
     [SerializeField]private GameObject cakePrefab;
     [SerializeField]private GameObject cakeSprinklesPrefab;
     [SerializeField]private GameObject chocolateCakePrefab;
@@ -129,6 +129,11 @@ public class ConveyorBelt : MonoBehaviour
 
     }
 
+    public void Reset() {
+        ingredientList.ForEach(x => Destroy(x));
+        ingredientList.Clear();
+    }
+
     private void Add(string name)
     {
 
@@ -164,10 +169,10 @@ public class ConveyorBelt : MonoBehaviour
                 newIngredient = Instantiate(sprinklesPrefab, (Vector2)transform.position
                         + new Vector2(2, 0), Quaternion.identity);
                  break;
-            /* case "Cake (Unfrosted)": */
-            /*     newIngredient = Instantiate(cakeUnfrostedPrefab, (Vector2)transform.position */
-            /*             + new Vector2(2, 0), Quaternion.identity); */
-            /*      break; */
+            case "Cake (Unfrosted)": 
+            newIngredient = Instantiate(cakeUnfrostedPrefab, (Vector2)transform.position 
+            + new Vector2(2, 0), Quaternion.identity); 
+            break; 
             case "Cake":
                 newIngredient = Instantiate(cakePrefab, (Vector2)transform.position
                         + new Vector2(2, 0), Quaternion.identity);
