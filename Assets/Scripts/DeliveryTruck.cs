@@ -9,12 +9,13 @@ public class DeliveryTruck : MonoBehaviour
 {
     private delegate void Win();
     private List<GoalItem> goals;
-    private List<GoalItem> savedGoals;
     private Win win;
     private TMP_Text[] goalTexts;
 
     void Start()
     {
+        GameObject.Find("Title").GetComponent<TMP_Text>().text = "Level " + LevelGenerator.GetCurrentLevel();
+
         goalTexts = new TMP_Text[4];
         goalTexts[0] = GameObject.Find("Goal1").GetComponent<TMP_Text>();
         goalTexts[1] = GameObject.Find("Goal2").GetComponent<TMP_Text>();
@@ -26,19 +27,19 @@ public class DeliveryTruck : MonoBehaviour
         goalTexts[2].text = "";
         goalTexts[3].text = "";
 
-        goals = new List<GoalItem>();
-        goals.Add(new GoalItem { name = "Egg", count = 10});
-        savedGoals = new List<GoalItem>();
+        goals = LevelGenerator.GetCurrentGoals();
 
         int i = 0;
         goals.ForEach(x => {
-            savedGoals.Add(new GoalItem {name = x.name, count = x.count});
             goalTexts[i].text = $"{x.name}: {x.count}";
             i++;
         });
 
 
-        win += () => Debug.Log("Win!");
+        win += () => {
+            PlayerPrefs.SetInt("lastLevelBeat", LevelGenerator.GetCurrentLevel());
+            LevelGenerator.NextLevel();
+        };
         win += Reset;
         win += FindObjectOfType<Robot>().Reset;
         win += FindObjectOfType<Oven>().Reset;
@@ -65,7 +66,6 @@ public class DeliveryTruck : MonoBehaviour
 
                 int i = 0;
                 goals.ForEach(x => {
-                    savedGoals.Add(new GoalItem {name = x.name, count = x.count});
                     goalTexts[i].text = $"{x.name}: {x.count}";
                     i++;
                 });
@@ -85,7 +85,7 @@ public class DeliveryTruck : MonoBehaviour
 
     public void Reset() {
         goals.Clear();
-        savedGoals.ForEach(x => goals.Add(new GoalItem {name = x.name, count = x.count}));
+        goals = LevelGenerator.GetCurrentGoals();
     }
 }
 

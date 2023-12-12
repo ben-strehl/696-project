@@ -12,6 +12,8 @@ public class TextEditor: MonoBehaviour
     private TMP_InputField inputComponent;
 
     void Start() {
+        path = LevelGenerator.GetCurrentPath();
+
         StreamReader sr = File.OpenText(path);
         string s = "";
         string line;
@@ -21,7 +23,7 @@ public class TextEditor: MonoBehaviour
         }
 
         inputComponent = GetComponent<TMP_InputField>();
-        inputComponent.text = s[(s.IndexOf('\n') + 1)..];
+        inputComponent.text = s.Substring(s.IndexOf('\n') + 1);
     }
 
     void OnGUI() {
