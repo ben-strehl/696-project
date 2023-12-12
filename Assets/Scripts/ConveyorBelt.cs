@@ -22,22 +22,28 @@ public class ConveyorBelt : MonoBehaviour
 
     private Queue<string> ingredientsToAdd;
     private List<GameObject> ingredientList;
+    private SpeedupButton speedup;
     private float cooldown;
 
     void Start(){
         ingredientsToAdd = new Queue<string>();
         ingredientList = new List<GameObject>();
+        speedup = FindObjectOfType<SpeedupButton>();
         cooldown = 0f;
     }
 
     void Update(){
         if(cooldown > 0f) {
-            cooldown = Mathf.Clamp(cooldown - Time.deltaTime, 0f, 1f);
+            cooldown = Mathf.Clamp(cooldown - Time.deltaTime, 0f, 1f / speedup.speedUpFactor);
+            return;
+        }
+
+        if(ingredientList.Count > 10) {
             return;
         }
 
         if(ingredientsToAdd.TryDequeue(out string ingredient)) {
-            cooldown = 1f;
+            cooldown = 1f / speedup.speedUpFactor;
             Add(ingredient);
         }
     }

@@ -5,17 +5,18 @@ using Unity.VisualScripting;
 
 public class Robot : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed;
     [SerializeField] private Sprite upSprite;
     [SerializeField] private Sprite downSprite;
     [SerializeField] private Sprite leftSprite;
     [SerializeField] private Sprite rightSprite;
+    private float moveSpeed;
     private Vector2 goalPosition;
     private State state;
     private ConveyorBelt conveyor;
     private Oven oven;
     private MixingTable table;
     private DeliveryTruck truck;
+    private SpeedupButton speedup;
     private GameObject ingredient;
 
     private Predicate<GameObject> frostingQuery;
@@ -24,11 +25,14 @@ public class Robot : MonoBehaviour
 
     void Start() 
     {
+        moveSpeed = 5f;
         state = State.Idle;
-        conveyor = (ConveyorBelt)FindObjectOfType(typeof(ConveyorBelt));
-        oven = (Oven)FindObjectOfType(typeof(Oven));
-        table = (MixingTable)FindObjectOfType(typeof(MixingTable));
-        truck = (DeliveryTruck)FindObjectOfType(typeof(DeliveryTruck));
+        conveyor = FindObjectOfType<ConveyorBelt>();
+        oven = FindObjectOfType<Oven>();
+        table = FindObjectOfType<MixingTable>();
+        truck = FindObjectOfType<DeliveryTruck>();
+        speedup = FindObjectOfType<SpeedupButton>();
+
         frostingQuery = x => x.GetComponent<Ingredient>().ingredientName == "Frosting"
             || x.GetComponent<Ingredient>().ingredientName == "Chocolate Frosting";
         cakeQuery = x => x.GetComponent<Ingredient>().ingredientName == "Cake (Unfrosted)";
@@ -55,7 +59,7 @@ public class Robot : MonoBehaviour
         Vector2 currentPosition = transform.position;
 
         if(goalPosition != (Vector2)transform.position){
-            var step =  moveSpeed * Time.deltaTime;
+            var step =  speedup.speedUpFactor * moveSpeed * Time.deltaTime;
             transform.position = Vector2.MoveTowards((Vector2)transform.position, goalPosition, step);
         }
 

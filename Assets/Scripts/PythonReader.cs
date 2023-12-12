@@ -4,45 +4,48 @@ using UnityEngine;
 using PocketPython;
 using System.IO;
 using System.Threading;
+using System;
+using System.Linq.Expressions;
+using UnityEngine.Rendering;
+using System.Data;
 
 public class PythonReader : MonoBehaviour
 {
-    [SerializeField] private string path;
     private ConveyorBelt conveyor;
     private VM vm;
+    private Thread thread;
+    private string playerAPI;
 
     void Start()
     {
         conveyor = FindObjectOfType<ConveyorBelt>();
         vm = new VM();
+        thread = new Thread(RunProgram);
+        thread.IsBackground = true;
+
         StreamReader sr = File.OpenText(".\\Assets\\Python\\playerAPI.py");
-        string s = "";
         string line;
         while ((line = sr.ReadLine()) != null)
         {
-            s += "\n" + line;
+            playerAPI += "\n" + line;
         }
-        vm.lazyModules["playerAPI"] = s;
-
-
-        sr = File.OpenText(path);
-        s = "";
-        line = "";
-        while ((line = sr.ReadLine()) != null)
-        {
-            s += "\n" + line;
-        }
-        RunProgramInThread(s);
+        vm.lazyModules["playerAPI"] = playerAPI;
     }
 
     public void RunProgramInThread(string code){
-        Thread thread = new Thread(RunProgram);
-        thread.IsBackground = true;
         thread.Start(code);
+    }
+
+    public void Reset() {
+        thread.Abort();
+        thread = new Thread(RunProgram);
+        vm = new VM();
+        vm.lazyModules["playerAPI"] = playerAPI;
     }
 
     private void RunProgram(object arg){
         string code =  (string) arg;
+        vm.Exec("from playerAPI import *", "main.py");
         vm.Exec(code, "main.py");
         var obj = vm.Eval("opList.get_self()");
 

@@ -28,11 +28,6 @@ public class MixingTable : MonoBehaviour
         handToRobot = FindObjectOfType<Robot>().WaitingForTable;
     }
 
-    void Update()
-    {
-        
-    }
-
     public void Add(GameObject ingredient) {
         string name = ingredient.GetComponent<Ingredient>().ingredientName;
         switch(name) {

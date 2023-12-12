@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using System.IO;
 
 public class ResetButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    private TextEditor editor;
+    private TMP_InputField input;
+    void Start() {
+        editor = FindObjectOfType<TextEditor>();
+        input = FindObjectOfType<TMP_InputField>();
     }
+    public void ResetCode() {
+        StreamReader sr = File.OpenText(editor.path);
+        string s = "";
+        string line;
+        while ((line = sr.ReadLine()) != null)
+        {
+            s += "\n" + line;
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        input.text = s[(s.IndexOf('\n') + 1)..];
     }
 }
