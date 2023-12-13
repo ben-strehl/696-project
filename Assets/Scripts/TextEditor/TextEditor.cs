@@ -34,15 +34,26 @@ public class TextEditor: MonoBehaviour
                 {
                     if (current.type == EventType.KeyUp)
                     {
-                        inputComponent.text += "  ";
-                        inputComponent.caretPosition += 2;
+                        inputComponent.text += "    ";
+                        inputComponent.caretPosition += 4;
                     }
                     current.Use();
                 }
             }
     }
-    void Update() {
+    
+    public void Reset() {
+        path = LevelGenerator.GetCurrentPath();
 
+        StreamReader sr = File.OpenText(path);
+        string s = "";
+        string line;
+        while ((line = sr.ReadLine()) != null)
+        {
+            s += "\n" + line;
+        }
+
+        inputComponent.text = s.Substring(s.IndexOf('\n') + 1);
     }
 
     public void Highlight(string text) {

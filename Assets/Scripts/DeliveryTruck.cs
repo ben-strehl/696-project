@@ -4,6 +4,7 @@ using System.Threading;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class DeliveryTruck : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class DeliveryTruck : MonoBehaviour
 
         win += () => {
             PlayerPrefs.SetInt("lastLevelBeat", LevelGenerator.GetCurrentLevel());
-            LevelGenerator.NextLevel();
+            FindObjectOfType<WinPanel>().MakeActive();
         };
         win += Reset;
         win += FindObjectOfType<Robot>().Reset;
@@ -84,7 +85,6 @@ public class DeliveryTruck : MonoBehaviour
     }
 
     public void Reset() {
-        goals.Clear();
         goals = LevelGenerator.GetCurrentGoals();
     }
 }

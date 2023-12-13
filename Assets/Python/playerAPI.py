@@ -31,15 +31,8 @@ def add_Frosting():
 def add_Chocolate():
     opList.append('Chocolate')
 
-def add_Vanilla():
-    opList.append('Vanilla')
-
 def add_Sprinkles():
     opList.append('Sprinkles')
 
 def add_Custom(ingredients: list):
     opList.extend(ingredients)
-
-# def add_Cake():
-#     opList.append('Cake')
-

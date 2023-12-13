@@ -8,6 +8,7 @@ using System;
 using System.Linq.Expressions;
 using UnityEngine.Rendering;
 using System.Data;
+using TMPro;
 
 public class PythonReader : MonoBehaviour
 {
@@ -15,10 +16,17 @@ public class PythonReader : MonoBehaviour
     private VM vm;
     private Thread thread;
     private string playerAPI;
+    private string errorMessage;
+    private TMP_InputField errorDisplay;
+    private PlayButton playButton;
 
     void Start()
     {
+        errorMessage = "";
         conveyor = FindObjectOfType<ConveyorBelt>();
+        errorDisplay = GameObject.Find("ErrorDisplay").GetComponent<TMP_InputField>();
+        playButton = FindObjectOfType<PlayButton>();
+        errorDisplay.interactable = false;
         vm = new VM();
         thread = new Thread(RunProgram);
         thread.IsBackground = true;
@@ -30,6 +38,13 @@ public class PythonReader : MonoBehaviour
             playerAPI += "\n" + line;
         }
         vm.lazyModules["playerAPI"] = playerAPI;
+    }
+
+    void Update() {
+        errorDisplay.text = errorMessage;
+        if(errorMessage != "") {
+            playButton.Stop();
+        }
     }
 
     public void RunProgramInThread(string code){
@@ -44,9 +59,14 @@ public class PythonReader : MonoBehaviour
     }
 
     private void RunProgram(object arg){
+        errorMessage = "";
         string code =  (string) arg;
         vm.Exec("from playerAPI import *", "main.py");
-        vm.Exec(code, "main.py");
+        try {
+            vm.Exec(code, "main.py");
+        } catch (PyException ex) {
+           errorMessage = ex.Message;
+        }
         var obj = vm.Eval("opList.get_self()");
 
         var pyReturn = (List<object>)vm.GetAttr(obj, "text");

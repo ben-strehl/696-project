@@ -15,7 +15,7 @@ public class PlayButton : MonoBehaviour
     void Start()
     {
         reader = FindObjectOfType<PythonReader>();
-        input = FindObjectOfType<TMP_InputField>();
+        input = GameObject.Find("Text Editor").GetComponent<TMP_InputField>();
         buttonComp = GetComponent<Button>();
         text = GetComponentInChildren<TMP_Text>();
         buttonComp.onClick.AddListener(Play);
