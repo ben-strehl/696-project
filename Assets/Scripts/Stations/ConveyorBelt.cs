@@ -136,6 +136,7 @@ public class ConveyorBelt : MonoBehaviour
     }
 
     public void Reset() {
+        ingredientsToAdd.Clear();
         ingredientList.ForEach(x => Destroy(x));
         ingredientList.Clear();
     }
@@ -167,6 +168,10 @@ public class ConveyorBelt : MonoBehaviour
                 newIngredient = Instantiate(frostingPrefab, (Vector2)transform.position
                         + new Vector2(2, 0), Quaternion.identity);
                  break;
+            case "Chocolate Frosting":
+                newIngredient = Instantiate(chocolateFrostingPrefab, (Vector2)transform.position
+                        + new Vector2(2, 0), Quaternion.identity);
+                 break;
             case "Chocolate":
                 newIngredient = Instantiate(chocolatePrefab, (Vector2)transform.position
                         + new Vector2(2, 0), Quaternion.identity);
@@ -196,7 +201,7 @@ public class ConveyorBelt : MonoBehaviour
                         + new Vector2(2, 0), Quaternion.identity);
                 break;
             default:
-                Debug.LogWarning("Invalid ingredient type", gameObject);
+                Debug.LogWarning("Invalid ingredient type: " + name, gameObject);
                 break;
         }
 
@@ -213,8 +218,6 @@ public class ConveyorBelt : MonoBehaviour
                         Debug.LogWarning("Ingredient component not found", gameObject);
                     }
                 });
-            /* newIngredient.transform.position = transform.position; */
-            /* StartCoroutine(MoveIngredient(newIngredient)); */
             ingredientList.Add(newIngredient);
         }
     }

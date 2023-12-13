@@ -10,7 +10,7 @@ public class ResetButton : MonoBehaviour
     private TMP_InputField input;
     void Start() {
         editor = FindObjectOfType<TextEditor>();
-        input = FindObjectOfType<TMP_InputField>();
+        input = GameObject.Find("Text Editor").GetComponent<TMP_InputField>();
     }
     public void ResetCode() {
         StreamReader sr = File.OpenText(editor.path);

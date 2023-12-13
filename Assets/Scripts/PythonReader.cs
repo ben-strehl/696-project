@@ -9,6 +9,8 @@ using System.Linq.Expressions;
 using UnityEngine.Rendering;
 using System.Data;
 using TMPro;
+using Unity.Jobs;
+using Unity.Collections;
 
 public class PythonReader : MonoBehaviour
 {
@@ -75,4 +77,3 @@ public class PythonReader : MonoBehaviour
         }
     }
 }
-
