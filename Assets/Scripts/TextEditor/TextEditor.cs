@@ -27,6 +27,7 @@ public class TextEditor: MonoBehaviour
     }
 
     void OnGUI() {
+        //Make tab into 4 spaces
         var current = Event.current;
             if (current.type == EventType.KeyDown || current.type == EventType.KeyUp)
             {
@@ -40,20 +41,6 @@ public class TextEditor: MonoBehaviour
                     current.Use();
                 }
             }
-    }
-    
-    public void Reset() {
-        path = LevelGenerator.GetCurrentPath();
-
-        StreamReader sr = File.OpenText(path);
-        string s = "";
-        string line;
-        while ((line = sr.ReadLine()) != null)
-        {
-            s += "\n" + line;
-        }
-
-        inputComponent.text = s.Substring(s.IndexOf('\n') + 1);
     }
 
     public void Highlight(string text) {

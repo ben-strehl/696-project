@@ -20,10 +20,6 @@ public class Robot : MonoBehaviour
     private SpeedupButton speedup;
     private GameObject ingredient;
 
-    // private Predicate<GameObject> frostingQuery;
-    // private Predicate<GameObject> cakeQuery;
-    // private Predicate<GameObject> sprinklesQuery;
-
     void Start() 
     {
         moveSpeed = 5f;
@@ -34,15 +30,11 @@ public class Robot : MonoBehaviour
         decoTable = FindObjectOfType<DecoratingTable>();
         truck = FindObjectOfType<DeliveryTruck>();
         speedup = FindObjectOfType<SpeedupButton>();
-
-        // frostingQuery = x => x.GetComponent<Ingredient>().ingredientName == "Frosting"
-        //     || x.GetComponent<Ingredient>().ingredientName == "Chocolate Frosting";
-        // cakeQuery = x => x.GetComponent<Ingredient>().ingredientName == "Cake (Unfrosted)";
-        // sprinklesQuery = x => x.GetComponent<Ingredient>().ingredientName == "Sprinkles";
     }
 
     void Update()
     {
+        //This is our finite state machine
         switch(state) {
             case State.Idle:
                 Idle();
@@ -53,6 +45,8 @@ public class Robot : MonoBehaviour
             case State.Moving:
                 Moving();
                 break;
+            //In these states we just wait for the oven or mixing table
+            //to call one of our methods
             case State.WaitingForOven: 
             case State.WaitingForTable:
                 return; 
@@ -68,6 +62,7 @@ public class Robot : MonoBehaviour
         Vector2 move = (Vector2)transform.position - currentPosition;
         var spriteRend = GetComponent<SpriteRenderer>();
 
+        //Rotate the sprite based on our direction of travel
         if(Mathf.Abs(move.x) > Mathf.Abs(move.y)){
             if(move.x > 0f) {
                 spriteRend.sprite = rightSprite;
@@ -96,17 +91,18 @@ public class Robot : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = downSprite;
     }
 
+    //Wait for an ingredient to arrive on the conveyor
     private void Idle() {
         goalPosition = transform.position;
 
         if(conveyor.IsEmpty()) {
-            // Debug.Log("Conveyor empty", gameObject);
             return;
         }
 
         state = State.Retrieving;
     }
 
+    //Grab the lead ingredient from the conveyor
     private void Retrieving() {
 
         if(conveyor.GetAt(0).transform.position.x <= conveyor.transform.position.x){
@@ -125,14 +121,17 @@ public class Robot : MonoBehaviour
 
     }
 
+    //Move to a station based on the ingredient held and the game state
     private void Moving() {
         Ingredient ingComp = ingredient.GetComponent<Ingredient>();
         ingComp.isGrabbed = true;
 
         ingredient.transform.position = transform.position - new Vector3(0f, 1f, 0f);
 
+        //Override all other logic and bring the ingredient to the truck if
+        //it is one of the goal ingredients
         if(truck.GetGoals().Contains(ingComp.ingredientName)) {
-            goalPosition = truck.transform.position;
+            goalPosition = (Vector2)truck.transform.position + new Vector2(1.5f, 0f);
             if(goalPosition == (Vector2)transform.position) {
                 truck.TurnIn(ingredient);
                 state = State.Idle;
@@ -157,6 +156,8 @@ public class Robot : MonoBehaviour
                     oven.Add(ingredient);
                 }
                 break;
+            //If there is chocolate in the mixing table, we assume the player is trying to
+            //make chocolate frosting
             case "Frosting":
                 if(table.HasChocolate()) {
                     goto case "Chocolate";
@@ -164,81 +165,22 @@ public class Robot : MonoBehaviour
                 goto case "Cake (Unfrosted)";
             case "Chocolate Frosting":
             case "Cake (Unfrosted)":
-                // GameObject unfrostedCake = conveyor.Find(cakeQuery);
-                // if(unfrostedCake != null) {
-                //     goalPosition = new Vector2(unfrostedCake.transform.position.x, unfrostedCake.transform.position.y + 1);
-                //     if(goalPosition == (Vector2)transform.position) {
-                //         ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(unfrostedCake));
-                //         return;
-                //     }
-                // }
+            case "Sprinkles":
+            case "Chocolate Cake":
+            case "Cake":
                 goalPosition = new Vector2(decoTable.transform.position.x, decoTable.transform.position.y - 1);
                 if(goalPosition == (Vector2)transform.position) {
                     decoTable.Add(ingredient);
                 }
                 break;
-                // GameObject cake = conveyor.Find(cakeQuery);
-                // if(conveyor.IsEmpty()) {
-                //     goalPosition = new Vector2(conveyor.transform.position.x, conveyor.transform.position.y + 1);
-                // } else if(cake != null) {
-                //     goalPosition = new Vector2(cake.transform.position.x, cake.transform.position.y + 1);
-                //     if(goalPosition == (Vector2)transform.position) {
-                //         ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(cake));
-                //         return;
-                //     }
-                // } else {
-                //     Vector2 conveyorLead = conveyor.GetAt(0).GetComponent<Ingredient>().goalPosition;
-                //     goalPosition = new Vector2(conveyorLead.x - 1, conveyorLead.y + 1);
-                // }
-                // if(goalPosition == (Vector2)transform.position) {
-                //     conveyor.AddToFront(ingredient);
-                //     state = State.Idle;
-                // }
-                // break;
-                // GameObject frosting = conveyor.Find(frostingQuery);
-                // if(conveyor.IsEmpty()) {
-                //     goalPosition = new Vector2(conveyor.transform.position.x, conveyor.transform.position.y + 1);
-                // } else if(frosting != null) {
-                //     goalPosition = new Vector2(frosting.transform.position.x, frosting.transform.position.y + 1);
-                //     if(goalPosition == (Vector2)transform.position) {
-                //         ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(frosting));
-                //         return;
-                //     }
-                // } else {
-                //     Vector2 conveyorLead = conveyor.GetAt(0).transform.position;
-                //     goalPosition = new Vector2(conveyorLead.x + 1, conveyorLead.y + 1);
-                // }
-                // if(goalPosition == (Vector2)transform.position) {
-                //     conveyor.AddToFront(ingredient);
-                //     state = State.Idle;
-                // }
-                // break;
-            case "Chocolate Cake":
-            case "Cake":
-                // GameObject sprinkles = conveyor.Find(sprinklesQuery);
-                // if(conveyor.IsEmpty()) {
-                //     goalPosition = new Vector2(conveyor.transform.position.x, conveyor.transform.position.y + 1);
-                // } else if(sprinkles != null) {
-                //     goalPosition = new Vector2(sprinkles.transform.position.x, sprinkles.transform.position.y + 1);
-                //     if(goalPosition == (Vector2)transform.position) {
-                //         ingredient = conveyor.Combine(ingredient, conveyor.IndexOf(sprinkles));
-                //         return;
-                //     }
-                // } else {
-                //     Vector2 conveyorLead = conveyor.GetAt(0).transform.position;
-                //     goalPosition = new Vector2(conveyorLead.x + 1, conveyorLead.y + 1);
-                // }
-                // if(goalPosition == (Vector2)transform.position) {
-                //     conveyor.AddToFront(ingredient);
-                //     state = State.Idle;
-                // }
-                // break;
             default:
                 state = State.Idle;
                 break;
         }
     }
 
+    //These two methods will be called by the oven, mixing table, or decorating table
+    //when they have something to give the robot
     public void WaitingForOven(GameObject ingredientObj) {
         Debug.Log("WaitingForOven invoked", gameObject);
         ingredient = ingredientObj;

@@ -4,13 +4,7 @@ using UnityEngine;
 using PocketPython;
 using System.IO;
 using System.Threading;
-using System;
-using System.Linq.Expressions;
-using UnityEngine.Rendering;
-using System.Data;
 using TMPro;
-using Unity.Jobs;
-using Unity.Collections;
 
 public class PythonReader : MonoBehaviour
 {
@@ -27,12 +21,13 @@ public class PythonReader : MonoBehaviour
         errorMessage = "";
         conveyor = FindObjectOfType<ConveyorBelt>();
         errorDisplay = GameObject.Find("ErrorDisplay").GetComponent<TMP_InputField>();
-        playButton = FindObjectOfType<PlayButton>();
         errorDisplay.interactable = false;
+        playButton = FindObjectOfType<PlayButton>();
         vm = new VM();
         thread = new Thread(RunProgram);
         thread.IsBackground = true;
 
+        //Create the playerAPI module
         StreamReader sr = File.OpenText(".\\Assets\\Python\\playerAPI.py");
         string line;
         while ((line = sr.ReadLine()) != null)
@@ -42,6 +37,7 @@ public class PythonReader : MonoBehaviour
         vm.lazyModules["playerAPI"] = playerAPI;
     }
 
+    //Update the display with any error messages
     void Update() {
         errorDisplay.text = errorMessage;
         if(errorMessage != "") {
@@ -63,12 +59,15 @@ public class PythonReader : MonoBehaviour
     private void RunProgram(object arg){
         errorMessage = "";
         string code =  (string) arg;
+
         vm.Exec("from playerAPI import *", "main.py");
+
         try {
             vm.Exec(code, "main.py");
         } catch (PyException ex) {
            errorMessage = ex.Message;
         }
+        //This grabs the opList object, which contains the list of ingredients the player has specified
         var obj = vm.Eval("opList.get_self()");
 
         var pyReturn = (List<object>)vm.GetAttr(obj, "text");

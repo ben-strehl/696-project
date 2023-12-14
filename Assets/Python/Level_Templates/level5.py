@@ -1,6 +1,7 @@
 # https://docs.python.org/3/tutorial/controlflow.html#if-statements
 
-# As you can see, this level has the same goal as the previous one.
+# As you can see, this level has the same goal 
+# as the previous one.
 # Like last time, we will make our 'ingredients' variable.
 ingredients = ["Chocolate", "Frosting", "Sugar", "Flour", "Egg", "Milk"]
 
@@ -32,5 +33,5 @@ ingredients = ["Chocolate", "Frosting", "Sugar", "Flour", "Egg", "Milk"]
 # ingredient == "Chocolate" is a condition that is only true
 # if the value of the 'ingredient' variable is "Chocolate".
 # 'elif' is short for 'else if' and elif statements only get
-# checked if the statements before them were false, otherwise
-# they simply don't get run.
+# checked if the statements before them were false, 
+# otherwise they simply don't get run.

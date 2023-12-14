@@ -15,6 +15,7 @@ public class SpeedupButton : MonoBehaviour
         speedUpFactor = 1f;
     }
 
+    //Can speed up by a factor of 2
     public void ToggleSpeedup() {
         if(text.text == "Speed Up") {
             speedUpFactor = 2f;

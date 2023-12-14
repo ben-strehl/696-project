@@ -2,13 +2,10 @@
 # We will need to add all of the ingredients and then
 # the robot will combine them on its own.
 
-# Type 'add_Egg()', 'add_Flour()', 'add_Sugar()',
-# 'add_Milk()', and 'add_Frosting()'.
+# Type  'add_Frosting()', 'add_Egg()', 'add_Flour()',
+# 'add_Sugar()', and 'add_Milk()'. 
 
 # Each must be typed on their own separate line.
-# The order is important! If you add the frosting first
-# the robot will get confused and think you're trying
-# to make chocolate frosting.
 
 # 'add_Egg()', 'add_Flour()', etc. are functions.
 # Functions are a way for programmers to define

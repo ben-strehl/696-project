@@ -18,6 +18,7 @@ public class LevelSelect : MonoBehaviour
         int lastLevelBeat = PlayerPrefs.GetInt("lastLevelBeat");
 
         text.text = "Level " + levelNum;
+        // Deactivate button if leve not unlocked, make text green if level already beat
         if(lastLevelBeat >= levelNum) {
             text.color = Color.green;
             buttonComp.interactable = true;
@@ -34,6 +35,7 @@ public class LevelSelect : MonoBehaviour
         int lastLevelBeat = PlayerPrefs.GetInt("lastLevelBeat");
 
         text.text = "Level " + levelNum;
+        // Deactivate button if leve not unlocked, make text green if level already beat
         if(lastLevelBeat >= levelNum) {
             text.color = Color.green;
             buttonComp.interactable = true;

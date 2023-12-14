@@ -23,12 +23,13 @@ public class PlayButton : MonoBehaviour
         stop += FindObjectOfType<Robot>().Reset;
         stop += FindObjectOfType<ConveyorBelt>().Reset;
         stop += FindObjectOfType<MixingTable>().Reset;
-        stop += FindObjectOfType<Oven>().Reset;
+        stop += FindObjectOfType<DecoratingTable>().Reset;
         stop += FindObjectOfType<DeliveryTruck>().Reset;
         stop += FindObjectOfType<PythonReader>().Reset;
         stop += FindObjectOfType<SpeedupButton>().Reset;
     }
 
+    //Start baking and toggle to stop button
     public void Play() {
         reader.RunProgramInThread(input.text);
         buttonComp.onClick.RemoveListener(Play);
@@ -36,6 +37,7 @@ public class PlayButton : MonoBehaviour
         text.text = "Stop";
     }
 
+    //Reset objects and toggle to play button
     public void Stop() {
         stop();
         buttonComp.onClick.RemoveListener(Stop);

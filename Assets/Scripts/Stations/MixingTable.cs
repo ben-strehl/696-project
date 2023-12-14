@@ -30,6 +30,8 @@ public class MixingTable : MonoBehaviour
 
     public void Add(GameObject ingredient) {
         string name = ingredient.GetComponent<Ingredient>().ingredientName;
+
+        //We hide the ingredients once they're on the table
         switch(name) {
             case "Flour":
                 ingredient.GetComponent<SpriteRenderer>().enabled = false;
@@ -82,6 +84,7 @@ public class MixingTable : MonoBehaviour
         chocolates.Clear();
     }
 
+    //Two recipes: chocolate frosting and dough
     private void Combine() {
         if(frostings.Count > 0 && chocolates.Count > 0) {
             handToRobot(Instantiate(chocolateFrostingPrefab, transform.position, Quaternion.identity));

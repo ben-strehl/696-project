@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
+//Everything in this class is static so it persists across scene changes
 public class LevelGenerator
 {
     private static int currentLevel = 0;
-    public static List<Level> levelList = new List<Level>(){
+    //Levels are defined as a list of goals and a path to the template file
+    private static List<Level> levelList = new List<Level>(){
         new Level {
             goals = new List<GoalItem>() { new GoalItem {
                 name = "Egg",
@@ -87,12 +89,24 @@ public class LevelGenerator
             }},
             path = ".\\Assets\\Python\\Level_Templates\\level8.py"
         },
+        new Level {
+            goals = new List<GoalItem>() { new GoalItem {
+                name = "Cake",
+                count = 10
+            },
+            new GoalItem {
+                name = "Cake (Sprinkles)",
+                count = 10
+            }},
+            path = ".\\Assets\\Python\\Level_Templates\\level9.py"
+        }
     };
 
     public static int GetCurrentLevel() {
         return currentLevel;
     }
 
+    //Current level cannot be incremented more than one past the last level beaten
     public static void SetCurrentLevel(int newLevel) {
         currentLevel = Math.Min(newLevel, PlayerPrefs.GetInt("lastLevelBeat") + 1);
     }
@@ -102,11 +116,21 @@ public class LevelGenerator
     }
 
     public static List<GoalItem> GetCurrentGoals() {
-        return levelList[currentLevel].goals;
+        //We must copy items over to avoid overwriting the static list
+        var list = new List<GoalItem>();
+        levelList[currentLevel].goals.ForEach(x => list.Add(new GoalItem {
+            name = x.name,
+            count = x.count
+        }));
+        return list;
     }
 
     public static string GetCurrentPath() {
         return levelList[currentLevel].path;
+    }
+
+    public static int getLevelCount() {
+        return levelList.Count;
     }
 }
 

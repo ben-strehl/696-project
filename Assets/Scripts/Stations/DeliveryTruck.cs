@@ -5,6 +5,7 @@ using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using System;
 
 public class DeliveryTruck : MonoBehaviour
 {
@@ -38,13 +39,14 @@ public class DeliveryTruck : MonoBehaviour
 
 
         win += () => {
-            PlayerPrefs.SetInt("lastLevelBeat", LevelGenerator.GetCurrentLevel());
+            PlayerPrefs.SetInt("lastLevelBeat", Math.Max(LevelGenerator.GetCurrentLevel(), PlayerPrefs.GetInt("lastLevelBeat")));
             FindObjectOfType<WinPanel>().MakeActive();
+            Debug.Log("Win!");
         };
         win += Reset;
         win += FindObjectOfType<Robot>().Reset;
-        win += FindObjectOfType<Oven>().Reset;
         win += FindObjectOfType<MixingTable>().Reset;
+        win += FindObjectOfType<DecoratingTable>().Reset;
         win += FindObjectOfType<ConveyorBelt>().Reset;
         win += FindObjectOfType<PythonReader>().Reset;
         win += FindObjectOfType<PlayButton>().Reset;
@@ -60,11 +62,13 @@ public class DeliveryTruck : MonoBehaviour
     public void TurnIn(GameObject ingredient) {
         Ingredient ingComp = ingredient.GetComponent<Ingredient>();
         GoalItem item = goals.Find(x => x.name == ingComp.ingredientName);
+
         if(item != null) {
             if(item.count != 0) {
                 Destroy(ingredient);
                 item.count--;
 
+                //Update the goal counters
                 int i = 0;
                 goals.ForEach(x => {
                     goalTexts[i].text = $"{x.name}: {x.count}";
@@ -78,9 +82,14 @@ public class DeliveryTruck : MonoBehaviour
         Debug.LogError("Invalid item turned in");
     }
 
+    //The robot AI uses this to determine if an ingredient is one of the goal ingredients
     public List<string> GetGoals() {
         List<string> goalList = new List<string>();
-        goals.ForEach(x => goalList.Add(x.name));
+        goals.ForEach(x => {
+            if(x.count > 0) {
+                goalList.Add(x.name);
+            }
+        });
         return goalList;
     }
 

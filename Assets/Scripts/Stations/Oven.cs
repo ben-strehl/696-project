@@ -7,18 +7,13 @@ public class Oven : MonoBehaviour
     private delegate void HandToRobot(GameObject ingredientObj);
     [SerializeField] private GameObject cakeUnfrostedPrefab;
     private HandToRobot handToRobot;
-    /* private GameObject ingredient; */
 
     void Start()
     {
         handToRobot = FindObjectOfType<Robot>().WaitingForTable;
     }
 
-    void Update()
-    {
-        
-    }
-
+    //Only action is to bake dough
     public void Add(GameObject ingredient) {
         string name = ingredient.GetComponent<Ingredient>().ingredientName;
         switch(name) {
@@ -32,9 +27,5 @@ public class Oven : MonoBehaviour
                 Debug.LogWarning("Attempt to add invalid ingredient to oven", gameObject);
                 break;
         }
-    }
-
-    public void Reset() {
-        
     }
 }

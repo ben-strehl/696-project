@@ -12,6 +12,8 @@ public class ResetButton : MonoBehaviour
         editor = FindObjectOfType<TextEditor>();
         input = GameObject.Find("Text Editor").GetComponent<TMP_InputField>();
     }
+
+    //Reset text editor by re-reading template python file
     public void ResetCode() {
         StreamReader sr = File.OpenText(editor.path);
         string s = "";

@@ -24,9 +24,4 @@ public class MixingTableTester : MonoBehaviour
         table.Add(sugar);
         table.Add(flour);
     }
-
-    void Update()
-    {
-        
-    }
 }

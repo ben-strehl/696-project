@@ -33,11 +33,13 @@ public class ConveyorBelt : MonoBehaviour
     }
 
     void Update(){
+        //1 second cooldown for adding new ingredient to the belt
         if(cooldown > 0f) {
             cooldown = Mathf.Clamp(cooldown - Time.deltaTime, 0f, 1f / speedup.speedUpFactor);
             return;
         }
 
+        //Limit of 10 ingredients on the belt at a time
         if(ingredientList.Count > 10) {
             return;
         }
@@ -52,16 +54,8 @@ public class ConveyorBelt : MonoBehaviour
         ingredientsToAdd.Enqueue(ingredient);
     }
 
-    public void AddToFront(GameObject ingredient) {
-        ingredientList.Insert(0, ingredient);
-    }
-
     public bool IsEmpty() {
         return ingredientList.Count == 0;
-    }
-
-    public int IndexOf(GameObject ingredient) {
-        return ingredientList.IndexOf(ingredient);
     }
 
     public GameObject GetAt(int index) {
@@ -70,69 +64,6 @@ public class ConveyorBelt : MonoBehaviour
 
     public void RemoveAt(int index) {
         ingredientList.RemoveAt(index);
-    }
-
-    public bool Exists(Predicate<GameObject> predicate) {
-        return ingredientList.Exists(predicate);
-    }
-
-    public GameObject Find(Predicate<GameObject> predicate) {
-        return ingredientList.Find(predicate);
-    }
-
-    public void Remove(GameObject ingredient) {
-        ingredientList.Remove(ingredient);
-    }
-
-    public GameObject Combine(GameObject ingredient, int ingIndex) {
-        Ingredient ingComp = ingredient.GetComponent<Ingredient>();
-        Ingredient ingInListComp = ingredientList[ingIndex].GetComponent<Ingredient>();
-        GameObject combinedIng = null;
-        
-        switch(ingComp.ingredientName) {
-            case "Cake (Unfrosted)":
-                if(ingInListComp.ingredientName == "Frosting") {
-                    combinedIng = Instantiate(cakePrefab, ingredient.transform.position, Quaternion.identity);
-                }
-                if(ingInListComp.ingredientName == "Chocolate Frosting") {
-                    combinedIng = Instantiate(chocolateCakePrefab, ingredient.transform.position, Quaternion.identity);
-                }
-                break;
-            case "Frosting":
-                if(ingInListComp.ingredientName == "Cake (Unfrosted)") {
-                    combinedIng = Instantiate(cakePrefab, ingredient.transform.position, Quaternion.identity);
-                }
-                break;
-            case "Chocolate Frosting":
-                if(ingInListComp.ingredientName == "Cake (Unfrosted)") {
-                    combinedIng = Instantiate(chocolateCakePrefab, ingredient.transform.position, Quaternion.identity);
-                }
-                break;
-            case "Cake":
-                if(ingInListComp.ingredientName == "Sprinkles") {
-                    combinedIng = Instantiate(cakeSprinklesPrefab, ingredient.transform.position, Quaternion.identity);
-                }
-                break;
-            case "Chocolate Cake":
-                if(ingInListComp.ingredientName == "Sprinkles") {
-                    combinedIng = Instantiate(chocolateCakeSprinklesPrefab, ingredient.transform.position, Quaternion.identity);
-                }
-                break;
-            default:
-                Debug.LogError("Conveyor cannot combine this ingredient", gameObject);
-                return ingredient;
-        }
-
-        if(combinedIng != null) {
-            Destroy(ingredient);
-            Destroy(ingredientList[ingIndex]);
-            ingredientList.RemoveAt(ingIndex);
-            return combinedIng;
-        }
-
-        Debug.LogError("Invalid ingredient chosen from conveyor");
-        return ingredient;
-
     }
 
     public void Reset() {
@@ -147,6 +78,8 @@ public class ConveyorBelt : MonoBehaviour
         Debug.Log("Adding to conveyor: " + name, gameObject);
         GameObject newIngredient = null;
 
+        //All new ingredient start 2 units to the right of the conveyor
+        //so they can transition into the scene smoothly
         switch(name) {
             case "Flour":
                 newIngredient = Instantiate(flourPrefab, (Vector2)transform.position
@@ -181,8 +114,8 @@ public class ConveyorBelt : MonoBehaviour
                         + new Vector2(2, 0), Quaternion.identity);
                  break;
             case "Cake (Unfrosted)": 
-            newIngredient = Instantiate(cakeUnfrostedPrefab, (Vector2)transform.position 
-            + new Vector2(2, 0), Quaternion.identity); 
+                newIngredient = Instantiate(cakeUnfrostedPrefab, (Vector2)transform.position 
+                    + new Vector2(2, 0), Quaternion.identity); 
             break; 
             case "Cake":
                 newIngredient = Instantiate(cakePrefab, (Vector2)transform.position
@@ -209,10 +142,11 @@ public class ConveyorBelt : MonoBehaviour
             var ingredientComp = newIngredient.GetComponent<Ingredient>(); 
             ingredientComp.ingredientName = name;
             ingredientComp.goalPosition = transform.position;
+
+            //Move each ingredient over to make space for the new one
             ingredientList.ForEach(ingredient => {
                     var ing = ingredient.GetComponent<Ingredient>();
                     if(ing != null) {
-                        /* Debug.Log("Moving: " + ing.ingredientName); */
                         ing.goalPosition.x -= 1;
                     } else {
                         Debug.LogWarning("Ingredient component not found", gameObject);
@@ -220,19 +154,5 @@ public class ConveyorBelt : MonoBehaviour
                 });
             ingredientList.Add(newIngredient);
         }
-    }
-
-    IEnumerator MoveIngredient(GameObject ingredient) {
-        var step = Vector2.Distance(transform.position, ingredient.transform.position)
-            * Time.deltaTime;
-        while(Vector2.Distance(transform.position, ingredient.transform.position) > 0.1) {
-            /* ingredient.GetComponent<Ingredient>().goalPosition = transform.position; */
-            ingredient.transform.position = Vector2.MoveTowards(ingredient.transform.position,
-                transform.position, step);
-            Debug.Log($"Ingredient position: {ingredient.transform.position}" + 
-                    $"Goal Position: {ingredient.GetComponent<Ingredient>().goalPosition}", ingredient);
-            yield return null;
-        }
-
     }
 }
