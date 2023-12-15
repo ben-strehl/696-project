@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using TMPro;
-using System.Linq;
 using System;
 
 public class DeliveryTruck : MonoBehaviour

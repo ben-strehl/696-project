@@ -1,10 +1,6 @@
-using System.Xml.Serialization;
 using UnityEngine;
-using UnityEngine.UIElements;
 using System.IO;
 using TMPro;
-using UnityEngine.UI;
-using System;
 
 public class TextEditor: MonoBehaviour
 {
