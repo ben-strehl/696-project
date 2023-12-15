@@ -28,6 +28,7 @@ public class SpeedupButton : MonoBehaviour
 
     public void Reset() {
         text.text = "Speed Up";
+        speedUpFactor = 1f;
     }
 
 }
