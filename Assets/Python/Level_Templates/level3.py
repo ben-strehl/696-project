@@ -15,7 +15,7 @@
 # attention to it.
 # This is called a 'for' loop, because it loops 'for' a set
 # number of times.
-# We use the range() function to specify how many times we want
-# to loop.
+# We use the range() function to specify how many times 
+# we want to loop.
 # 'range(10)' is an example of passing an argument to a
 # function, where '10' is the argument.
