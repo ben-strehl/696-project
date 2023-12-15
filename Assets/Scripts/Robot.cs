@@ -162,6 +162,7 @@ public class Robot : MonoBehaviour
                 if(table.HasChocolate()) {
                     goto case "Chocolate";
                 } 
+                //Otherwise, put it on the decorating table
                 goto case "Cake (Unfrosted)";
             case "Chocolate Frosting":
             case "Cake (Unfrosted)":

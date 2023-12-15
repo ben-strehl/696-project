@@ -24,11 +24,13 @@ public class ConveyorBelt : MonoBehaviour
     private List<GameObject> ingredientList;
     private SpeedupButton speedup;
     private float cooldown;
+    private PythonReader reader;
 
     void Start(){
         ingredientsToAdd = new Queue<string>();
         ingredientList = new List<GameObject>();
         speedup = FindObjectOfType<SpeedupButton>();
+        reader = FindObjectOfType<PythonReader>();
         cooldown = 0f;
     }
 
@@ -134,7 +136,10 @@ public class ConveyorBelt : MonoBehaviour
                         + new Vector2(2, 0), Quaternion.identity);
                 break;
             default:
-                Debug.LogWarning("Invalid ingredient type: " + name, gameObject);
+                // Debug.LogWarning("Invalid ingredient type: " + name, gameObject);
+                // errorDisplay.text = "<color=\"red\">" + "Invalid ingredient type: " + name;
+                reader.SetErrorMessage("<color=\"red\">" + "Invalid ingredient type: " + name);
+                FindObjectOfType<PlayButton>().Stop();
                 break;
         }
 

@@ -39,7 +39,7 @@ public class PythonReader : MonoBehaviour
 
     //Update the display with any error messages
     void Update() {
-        errorDisplay.text = errorMessage;
+        errorDisplay.text = "<color=\"red\">" + errorMessage;
         if(errorMessage != "") {
             playButton.Stop();
         }
@@ -54,6 +54,10 @@ public class PythonReader : MonoBehaviour
         thread = new Thread(RunProgram);
         vm = new VM();
         vm.lazyModules["playerAPI"] = playerAPI;
+    }
+
+    public void SetErrorMessage(string message) {
+        errorMessage = message;
     }
 
     private void RunProgram(object arg){
