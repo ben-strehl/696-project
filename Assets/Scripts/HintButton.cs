@@ -15,10 +15,10 @@ public class HintButton : MonoBehaviour
     public void ToggleActive() {
         if(hintPanel.activeSelf){
             hintPanel.SetActive(false);
-            text.text = "Show Functions";
+            text.text = "Show Hint";
         } else {
             hintPanel.SetActive(true);
-            text.text = "Hide Functions";
+            text.text = "Hide Hint";
         }
     }
 }
