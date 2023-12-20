@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
 
 public class Highlighter 
 {
@@ -30,11 +27,6 @@ public class Highlighter
             coloredSB.Remove(colorCollection[0].Index, colorCollection[0].Length);
             colorCollection = colorRx.Matches(coloredSB.ToString());
         }
-
-        // if(Input.GetKey(KeyCode.Tab)) {
-        //     coloredSB.Insert(textEditor.caretPosition, "    ");
-        //     textEditor.caretPosition += 4;
-        // }
 
         //This is our text without the rich text formatting and it should be runnable for pocketpy
         string pythonString = coloredSB.ToString();
@@ -79,8 +71,6 @@ public class Highlighter
             coloredSB.Insert(commentCollection[i].Index, @"<color=#928374ff>" + commentCollection[i].Value + "</color>");
             commentCollection = commentRx.Matches(coloredSB.ToString());
         }
-
-
 
         return (pythonString, coloredSB.ToString(), textEditor.caretPosition);
     }
