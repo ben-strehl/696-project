@@ -5,7 +5,11 @@ using TMPro;
 public class TextEditor: MonoBehaviour
 {
     public string path;
+    public string pythonString;
     private TMP_InputField inputComponent;
+    private Highlighter highlighter;
+    private int caretPos;
+    private bool newCaretPos;
 
     void Start() {
         path = LevelGenerator.GetCurrentPath();
@@ -18,28 +22,26 @@ public class TextEditor: MonoBehaviour
             s += "\n" + line;
         }
 
+        highlighter = new Highlighter();
+
         inputComponent = GetComponent<TMP_InputField>();
         inputComponent.text = s.Substring(s.IndexOf('\n') + 1);
+
+        // (pythonString, inputComponent.text) = highlighter.HighlightInitial(s.Substring(s.IndexOf('\n') + 1));
+        // Debug.Log(inputComponent.text);
     }
 
-    void OnGUI() {
-        //Make tab into 4 spaces
-        var current = Event.current;
-            if (current.type == EventType.KeyDown || current.type == EventType.KeyUp)
-            {
-                if (current.isKey && (current.keyCode == KeyCode.Tab || current.character == '\t'))
-                {
-                    if (current.type == EventType.KeyUp)
-                    {
-                        inputComponent.text += "    ";
-                        inputComponent.caretPosition += 4;
-                    }
-                    current.Use();
-                }
-            }
+    void Update() {
+        if(newCaretPos) {
+            inputComponent.caretPosition = caretPos;
+            newCaretPos = false;
+        }
     }
 
     public void Highlight(string text) {
-        // Debug.Log(text);
+        string temp;
+        (pythonString, temp, caretPos) = highlighter.Highlight(text);
+        inputComponent.SetTextWithoutNotify(temp);
+        newCaretPos = true;
     }
 }

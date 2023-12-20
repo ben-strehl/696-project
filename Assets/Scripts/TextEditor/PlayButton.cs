@@ -6,14 +6,14 @@ public class PlayButton : MonoBehaviour
 {
     private delegate void StopEvent();
     private PythonReader reader;
-    private TMP_InputField input;
+    private TextEditor input;
     private Button buttonComp;
     private TMP_Text text;
     private StopEvent stop;
     void Start()
     {
         reader = FindObjectOfType<PythonReader>();
-        input = GameObject.Find("Text Editor").GetComponent<TMP_InputField>();
+        input = GameObject.Find("Text Editor").GetComponent<TextEditor>();
         buttonComp = GetComponent<Button>();
         text = GetComponentInChildren<TMP_Text>();
         buttonComp.onClick.AddListener(Play);
@@ -29,7 +29,7 @@ public class PlayButton : MonoBehaviour
 
     //Start baking and toggle to stop button
     public void Play() {
-        reader.RunProgramInThread(input.text);
+        reader.RunProgramInThread(input.pythonString);
         buttonComp.onClick.RemoveListener(Play);
         buttonComp.onClick.AddListener(Stop);
         text.text = "Stop";
